@@ -39,6 +39,7 @@ public class NewNoteActivity extends AppCompatActivity {
                 if (b)
                 {
                     Task task = new Task(name.getText().toString(), (Date)(data.getText()), description.getText().toString());
+                    //commemt to commit
                     finish();
                 }
             }
