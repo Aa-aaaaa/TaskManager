@@ -13,9 +13,10 @@ public class Task {
         this.name = "";
     }
 
-    public Task(int number, Date time, String description) {
+    public Task(Date time, String description, String name) {
         this.time = time;
         this.description = description;
+        this.name = name;
     }
 
     public String getDescription() {
