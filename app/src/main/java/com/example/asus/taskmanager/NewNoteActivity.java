@@ -38,7 +38,7 @@ public class NewNoteActivity extends AppCompatActivity {
                 }
                 if (b)
                 {
-                    //Tasks tasks = new Tasks((int)name.getText(), (Date)(data.getText()), description.getText());
+                    Task task = new Task(name.getText().toString(), (Date)(data.getText()), description.getText().toString());
                     finish();
                 }
             }
