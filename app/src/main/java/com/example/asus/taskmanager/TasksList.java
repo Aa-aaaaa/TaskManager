@@ -28,7 +28,7 @@ public class TasksList {
     {
         return arrayList.get(index);
     }
-
+    
     public int getSize()
     {
         return arrayList.size();
