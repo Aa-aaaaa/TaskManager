@@ -36,9 +36,11 @@ public class NewNoteActivity extends AppCompatActivity {
                     Toast.makeText(NewNoteActivity.this, "Empty name of task", Toast.LENGTH_SHORT).show();
                     b = true;
                 }
-                if (b)
+                if (!b)
                 {
-                    Task task = new Task(name.getText().toString(), (Date)(data.getText()), description.getText().toString());
+                    Task task = new Task(name.getText().toString(), new Date(Long.parseLong(data.getText().toString())), description.getText().toString());
+                    MainActivity.getTaskList().insert(task);
+                    MainActivity.getTaskListAdapter().notifyDataSetChanged();
                     //commemt to commit
                     finish();
                 }
