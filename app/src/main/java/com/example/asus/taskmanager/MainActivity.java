@@ -13,8 +13,8 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final String[] strings = {"Task1", "Task2", "Task3", "Task4"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, strings);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.list_task_view, strings);
+        TaskListAdapter<Task> adapter =;
         ((ListView)findViewById(R.id.taskList)).setAdapter(adapter);
     }
 }
