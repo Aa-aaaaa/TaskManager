@@ -28,6 +28,11 @@ public class TasksList {
     {
         return arrayList.get(index);
     }
+    
+    public int getSize()
+    {
+        return arrayList.size();
+    }
 
     public void delete(int index) {
         this.arrayList.remove(index);
