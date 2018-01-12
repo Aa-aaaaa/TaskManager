@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.TreeSet;
 
-public class TasksList {
+public class TaskList {
     private ArrayList<Task> arrayList;
 
-    public TasksList() {
+    public TaskList() {
         this.arrayList = new ArrayList<>();
     }
 

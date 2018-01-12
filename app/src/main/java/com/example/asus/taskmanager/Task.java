@@ -13,7 +13,7 @@ public class Task {
         this.name = "";
     }
 
-    public Task(Date time, String description, String name) {
+    public Task(String name, Date time, String description) {
         this.time = time;
         this.description = description;
         this.name = name;
