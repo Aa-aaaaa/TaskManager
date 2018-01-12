@@ -9,9 +9,14 @@ import android.widget.TextView;
 
 public class TaskListAdapter extends BaseAdapter
 {
+    TasksList tasksList;
+    TaskListAdapter(TasksList tasksList)
+    {
+        this.tasksList = tasksList;
+    }
     @Override
     public int getCount() {
-        return 10;
+        return tasksList.getSize();
     }
 
     @Override
@@ -26,10 +31,12 @@ public class TaskListAdapter extends BaseAdapter
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_task_view, viewGroup, false);
-        ((TextView)view.findViewById(R.id.taskName)).setText("Name " + i/*Марина допишет*/);
-        ((TextView)view.findViewById(R.id.taskDescription)).setText("Desc " + i + " lol!");
+    public View getView(int i, View view, ViewGroup viewGroup)
+    {
+        if (view == null)
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_task_view, viewGroup, false);
+        ((TextView)view.findViewById(R.id.taskName)).setText(tasksList.getTask(i).getName());
+        ((TextView)view.findViewById(R.id.taskDescription)).setText(tasksList.getTask(i).getDescription());
         return view;
     }
 }
