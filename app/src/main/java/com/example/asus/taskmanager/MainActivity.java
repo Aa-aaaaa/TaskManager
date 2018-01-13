@@ -18,7 +18,6 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         taskList.insert(new Task("MyTask1", new Date(1337 * 1000 * 60 * 60), "Easy"));
         taskList.insert(new Task("MyTask2", new Date(1488 * 1000 * 60 * 60), "Hard"));
         taskList.insert(new Task("MyTask3", new Date(322 * 1000 * 60 * 60), "Very-Hard"));
