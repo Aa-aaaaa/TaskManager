@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.asus.taskmanager.MainActivity">
-1337
 
     <Button
         android:id="@+id/buttonGoMakeNewTask"
