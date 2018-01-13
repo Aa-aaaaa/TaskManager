@@ -1,22 +1,20 @@
 package com.example.asus.taskmanager;
 
-import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
 
-public class NewNoteActivity extends AppCompatActivity {
+public class NewTaskActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_note);
+        setContentView(R.layout.activity_new_task);
         Button button = findViewById(R.id.buttonMakeNewNote);
         button.setOnClickListener(new View.OnClickListener() {
             @SuppressWarnings("SingleStatementInBlock")
@@ -28,12 +26,12 @@ public class NewNoteActivity extends AppCompatActivity {
                 EditText description = findViewById(R.id.editTextDescription);
                 if (name.length() > 50)
                 {
-                    Toast.makeText(NewNoteActivity.this, "Too large name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewTaskActivity.this, "Too large name", Toast.LENGTH_SHORT).show();
                     b = true;
                 }
                 if (name.length() < 1)
                 {
-                    Toast.makeText(NewNoteActivity.this, "Empty name of task", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewTaskActivity.this, "Empty name of task", Toast.LENGTH_SHORT).show();
                     b = true;
                 }
                 if (!b)
