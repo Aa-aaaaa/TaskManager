@@ -7,10 +7,17 @@ import java.util.Comparator;
 import java.util.TreeSet;
 
 public class TaskList {
+    private static TaskList taskList;
     private ArrayList<Task> arrayList;
 
-    public TaskList() {
+    private TaskList() {
         this.arrayList = new ArrayList<>();
+    }
+
+    public static TaskList getInstance() {
+        if (taskList == null)
+            taskList = new TaskList();
+        return taskList;
     }
 
     public void insert(Task task)

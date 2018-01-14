@@ -12,11 +12,11 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
 {
-    static private TaskList taskList = new TaskList();
     static private TaskListAdapter taskListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        final TaskList taskList = TaskList.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -47,10 +47,10 @@ public class MainActivity extends AppCompatActivity
         );
     }
 
-    public static TaskList getTaskList() {
+/*    public static TaskList getTaskList() {
         return taskList;
     }
-
+*/
     public static TaskListAdapter getTaskListAdapter() {
         return taskListAdapter;
     }
