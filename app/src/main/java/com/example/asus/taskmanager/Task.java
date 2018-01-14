@@ -4,17 +4,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Task {
-    private Date time;
+    private MyDate time;
     private String description;
     private String name;
 
     public Task() {
-        this.time = new Date();
+        this.time = new MyDate();
         this.description = "";
         this.name = "";
     }
 
-    public Task(String name, Date time, String description) {
+    public Task(String name, MyDate time, String description) {
         this.time = time;
         this.description = description;
         this.name = name;
@@ -48,7 +48,7 @@ public class Task {
         return this.description;
     }
 
-    public Date getTime() {
+    public MyDate getTime() {
         return this.time;
     }
 
@@ -61,7 +61,7 @@ public class Task {
     }
 
     public void setTime(Date time) {
-        this.time = time;
+        this.time.setTime(time);
     }
 
     public void setName(String name) {

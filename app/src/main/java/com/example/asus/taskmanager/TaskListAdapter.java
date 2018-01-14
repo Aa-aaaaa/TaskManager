@@ -37,7 +37,7 @@ public class TaskListAdapter extends BaseAdapter
         ((TextView)view.findViewById(R.id.taskName)).
                 setText(taskList.getTask(i).getName());
         ((TextView)view.findViewById(R.id.taskDescription)).
-                setText(taskList.getTask(i).getTime().toString());
+                setText(taskList.getTask(i).getTime().getString());
         return view;
     }
 }
