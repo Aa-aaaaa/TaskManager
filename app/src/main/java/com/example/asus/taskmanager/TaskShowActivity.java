@@ -30,7 +30,7 @@ public class TaskShowActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 taskList.deleteTask(index);
-                MainActivity.getTaskListAdapter().notifyDataSetChanged();
+      //          MainActivity.getTaskListAdapter().notifyDataSetChanged();
                 finish();
             }
         });
@@ -45,7 +45,6 @@ public class TaskShowActivity extends AppCompatActivity {
                     return;
                 }
                 taskList.changeTask(index, new Task(name.getText().toString(), myDate, description.getText().toString()));
-                MainActivity.getTaskListAdapter().notifyDataSetChanged();
                 finish();
             }
         });

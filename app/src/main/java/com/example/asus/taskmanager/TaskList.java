@@ -26,7 +26,7 @@ public class TaskList {
         Collections.sort(arrayList, new Comparator<Task>() {
             public int compare(Task a, Task b)
             {
-                return (a.getTime().compareTo(b.getTime()));
+                return (a.getTime().myGetTime().compareTo(b.getTime().myGetTime()));
             }
         });
     }
@@ -46,7 +46,7 @@ public class TaskList {
         Collections.sort(arrayList, new Comparator<Task>() {
             public int compare(Task a, Task b)
             {
-                return (a.getTime().compareTo(b.getTime()));
+                return (a.getTime().myGetTime().compareTo(b.getTime().myGetTime()));
             }
         });
     }
