@@ -31,6 +31,11 @@ public class TaskList {
         });
     }
 
+    public void addTaskNotSort(Task task)
+    {
+        this.arrayList.add(task);
+    }
+
     public Task getTask(int index)
     {
         return arrayList.get(index);

@@ -38,7 +38,9 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onClick(View view)
                     {
-                        Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
+                        Intent intent = new Intent(MainActivity.this, TaskShowActivity.class);
+                        taskList.addTaskNotSort(new Task());
+                        intent.putExtra("index", taskList.getSize() - 1);
                         startActivity(intent);
                     }
                 }

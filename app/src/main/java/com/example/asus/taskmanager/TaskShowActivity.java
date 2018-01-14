@@ -44,6 +44,11 @@ public class TaskShowActivity extends AppCompatActivity {
                     Toast.makeText(TaskShowActivity.this, "Bad date", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                else if (name.length() > 50 || name.length() < 1)
+                {
+                    Toast.makeText(TaskShowActivity.this, "Bad name", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 taskList.changeTask(index, new Task(name.getText().toString(), myDate, description.getText().toString()));
                 finish();
             }
