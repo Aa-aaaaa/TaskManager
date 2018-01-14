@@ -43,7 +43,7 @@ public class NewTaskActivity extends AppCompatActivity {
                 if (!b)
                 {
                     Task task = new Task(name.getText().toString(), myDate, description.getText().toString());
-                    TaskList.getInstance().insert(task);
+                    TaskList.getInstance()addTask(task);
                     MainActivity.getTaskListAdapter().notifyDataSetChanged();
                     //commemt to commit
                     finish();

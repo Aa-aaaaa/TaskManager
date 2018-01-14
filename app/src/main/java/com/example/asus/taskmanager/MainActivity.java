@@ -26,9 +26,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MainActivity.this, TaskShowActivity.class);
-                intent.putExtra("name", taskList.getTask(i).getName());
-                intent.putExtra("time", taskList.getTask(i).getTime().getString());
-                intent.putExtra("description", taskList.getTask(i).getDescription());
+                intent.putExtra("index", i);
                 startActivity(intent);
             }
         });

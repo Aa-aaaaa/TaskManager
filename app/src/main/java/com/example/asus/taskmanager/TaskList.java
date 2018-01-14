@@ -20,7 +20,7 @@ public class TaskList {
         return taskList;
     }
 
-    public void insert(Task task)
+    public void addTask(Task task)
     {
         this.arrayList.add(task);
         Collections.sort(arrayList, new Comparator<Task>() {
@@ -41,7 +41,7 @@ public class TaskList {
         return arrayList.size();
     }
 
-    public void delete(int index) {
+    public void deleteTask(int index) {
         this.arrayList.remove(index);
         Collections.sort(arrayList, new Comparator<Task>() {
             public int compare(Task a, Task b)
@@ -50,4 +50,11 @@ public class TaskList {
             }
         });
     }
+
+    public void changeTask(int index, Task newTask)
+    {
+        deleteTask(index);
+        addTask(newTask);
+    }
+
 }

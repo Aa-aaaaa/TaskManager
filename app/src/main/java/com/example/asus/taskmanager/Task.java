@@ -20,6 +20,30 @@ public class Task {
         this.name = name;
     }
 
+    public boolean stringToTime(String s) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        Date t = new Date(), timeNow, timeFromString;
+        String stringTimeNow = simpleDateFormat.format(time), s2 = "";
+        try {
+            timeNow = simpleDateFormat.parse(stringTimeNow);
+            timeFromString = simpleDateFormat.parse(s);
+            if (timeNow.compareTo(timeFromString) >= 0
+                    || (simpleDateFormat.format(timeFromString) != s))
+                return false;
+            time.setTime(t.getTime() + timeFromString.getTime() - timeNow.getTime());
+        }
+        catch (Exception e) {
+            return false;
+        };
+        return true;
+    }
+
+    public String timeToString()
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        return simpleDateFormat.format(time);
+    }
+
     public String getDescription() {
         return this.description;
     }
