@@ -45,10 +45,6 @@ public class MainActivity extends AppCompatActivity
         );
     }
 
-/*    public static TaskList getTaskList() {
-        return taskList;
-    }
-*/
     public static TaskListAdapter getTaskListAdapter() {
         return taskListAdapter;
     }
