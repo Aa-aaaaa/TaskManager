@@ -1,5 +1,6 @@
 package com.example.asus.taskmanager;
 
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -34,9 +35,20 @@ public class NewTaskActivity extends AppCompatActivity {
                     Toast.makeText(NewTaskActivity.this, "Empty name of task", Toast.LENGTH_SHORT).show();
                     b = true;
                 }
+                Date date = null;
+                try
+                {
+                    date = new Date(Long.parseLong(data.getText().toString()));
+                }
+                catch (Exception e)
+                {
+                    //e.getStackTrace();
+                    Toast.makeText(NewTaskActivity.this, "Non-numeric symbols found in date", Toast.LENGTH_SHORT).show();
+                    b = true;
+                }
                 if (!b)
                 {
-                    Task task = new Task(name.getText().toString(), new Date(Long.parseLong(data.getText().toString())), description.getText().toString());
+                    Task task = new Task(name.getText().toString(), date, description.getText().toString(), MainActivity.getDataBase().getSize());
                     MainActivity.getTaskList().addTask(task);
                     MainActivity.getTaskListAdapter().notifyDataSetChanged();
                     //commemt to commit

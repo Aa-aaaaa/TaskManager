@@ -1,6 +1,7 @@
 package com.example.asus.taskmanager;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,11 +15,14 @@ public class MainActivity extends AppCompatActivity
 {
     static private TaskList taskList = new TaskList();
     static private TaskListAdapter taskListAdapter;
+    static private DataBase dataBase;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        dataBase = new DataBase(MainActivity.this);
+        dataBase.takeAllNotesFomDataBase(taskList);
 
         taskListAdapter = new TaskListAdapter(taskList);
 
@@ -51,5 +55,10 @@ public class MainActivity extends AppCompatActivity
 
     public static TaskListAdapter getTaskListAdapter() {
         return taskListAdapter;
+    }
+
+    public static DataBase getDataBase()
+    {
+        return dataBase;
     }
 }

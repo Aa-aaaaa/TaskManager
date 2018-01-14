@@ -39,7 +39,7 @@ public class TaskShowActivity extends AppCompatActivity {
                 MainActivity.getTaskList().changeTask(index, new Task(
                         name.getText().toString(),
                         new Date(Long.parseLong(time.getText().toString())),
-                        description.getText().toString()
+                        description.getText().toString(), MainActivity.getDataBase().getSize()
                 ));
                 MainActivity.getTaskListAdapter().notifyDataSetChanged();
                 finish();

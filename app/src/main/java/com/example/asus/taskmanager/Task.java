@@ -6,17 +6,20 @@ public class Task {
     private Date time;
     private String description;
     private String name;
+    private int id;
 
     public Task() {
         this.time = new Date();
         this.description = "";
         this.name = "";
+        this.id = 0;
     }
 
-    public Task(String name, Date time, String description) {
+    public Task(String name, Date time, String description, int id) {
         this.time = time;
         this.description = description;
         this.name = name;
+        this.id = id;
     }
 
     public String getDescription() {
@@ -29,6 +32,11 @@ public class Task {
 
     public String getName() {
         return this.name;
+    }
+
+    public int getId()
+    {
+        return this.id;
     }
 
     public void setDescription(String description) {
