@@ -40,8 +40,6 @@ public class NewTaskActivity extends AppCompatActivity {
                     Toast.makeText(NewTaskActivity.this, "Bad date", Toast.LENGTH_SHORT).show();
                     b = true;
                 }
-                //не очень понятен смысл предыдыущих двух проверок
-                // и то, что они идут только на name
                 if (!b)
                 {
                     Task task = new Task(name.getText().toString(), myDate, description.getText().toString());

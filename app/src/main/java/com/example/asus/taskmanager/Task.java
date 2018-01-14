@@ -10,14 +10,12 @@ public class Task {
 
     public Task() {
         this.time = new MyDate();
-        this.time.setTime(new Date());
         this.description = "";
         this.name = "";
     }
 
-    public Task(String name, Date time, String description) {
-        this.time = new MyDate();
-        this.time.timeToString(time);
+    public Task(String name, MyDate time, String description) {
+        this.time = time;
         this.description = description;
         this.name = name;
     }
