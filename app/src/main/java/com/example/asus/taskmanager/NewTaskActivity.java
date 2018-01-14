@@ -34,9 +34,17 @@ public class NewTaskActivity extends AppCompatActivity {
                     Toast.makeText(NewTaskActivity.this, "Empty name of task", Toast.LENGTH_SHORT).show();
                     b = true;
                 }
+                MyDate myDate = new MyDate();
+                if (!myDate.stringToTime(data.getText().toString()))
+                {
+                    Toast.makeText(NewTaskActivity.this, "Bad date", Toast.LENGTH_SHORT).show();
+                    b = true;
+                }
+                //не очень понятен смысл предыдыущих двух проверок
+                // и то, что они идут только на name
                 if (!b)
                 {
-                    Task task = new Task(name.getText().toString(), new Date(Long.parseLong(data.getText().toString())), description.getText().toString());
+                    Task task = new Task(name.getText().toString(), myDate, description.getText().toString());
                     MainActivity.getTaskList().insert(task);
                     MainActivity.getTaskListAdapter().notifyDataSetChanged();
                     //commemt to commit

@@ -20,9 +20,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        taskList.insert(new Task("MyTask1", new Date(1337 * 1000 * 60 * 60), "Easy"));
-        taskList.insert(new Task("MyTask2", new Date(1488 * 1000 * 60 * 60), "Hard"));
-        taskList.insert(new Task("MyTask3", new Date(322 * 1000 * 60 * 60), "Very-Hard"));
+        taskList.insert(new Task("MyTask1", new Date(1337 * 1000 * 60), "Easy"));
+        taskList.insert(new Task("MyTask2", new Date(1488 * 1000 * 60), "Hard"));
+        taskList.insert(new Task("MyTask3", new Date(322 * 1000 * 60 ), "Very-Hard"));
         taskListAdapter = new TaskListAdapter(taskList);
 
         ((ListView)findViewById(R.id.taskList)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MainActivity.this, TaskShowActivity.class);
                 intent.putExtra("name", taskList.getTask(i).getName());
-                intent.putExtra("time", taskList.getTask(i).getTime().toString());
+                intent.putExtra("time", taskList.getTask(i).getTime().getString());
                 intent.putExtra("description", taskList.getTask(i).getDescription());
                 startActivity(intent);
             }
