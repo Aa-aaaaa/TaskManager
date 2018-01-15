@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,19 +18,18 @@ public class TaskShowActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_task);
 
-        final TaskList taskList = TaskList.getInstance();
         final int index = getIntent().getIntExtra("index", 0);
-        final TextView name = (TextView)findViewById(R.id.name);
-        name.setText(taskList.getTask(index).getName());
-        final TextView time = (TextView)findViewById(R.id.time);
-        time.setText(taskList.getTask(index).getTime().getString());
-        final TextView description = (TextView)findViewById(R.id.description);
-        description.setText(taskList.getTask(index).getDescription());
+        final EditText name = (EditText)findViewById(R.id.name);
+        name.setText(TaskList.getInstance().getTask(index).getName());
+        final EditText time = (EditText)findViewById(R.id.time);
+        time.setText(TaskList.getInstance().getTask(index).getTime().getString());
+        final EditText description = (EditText)findViewById(R.id.description);
+        description.setText(TaskList.getInstance().getTask(index).getDescription());
 
         ((Button)findViewById(R.id.buttonDeleteTask)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                taskList.deleteTask(index);
+                TaskList.getInstance().deleteTask(index);
                 MainActivity.getTaskListAdapter().notifyDataSetChanged();
                 finish();
             }
@@ -44,7 +44,7 @@ public class TaskShowActivity extends AppCompatActivity {
                     Toast.makeText(TaskShowActivity.this, "Bad date", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                taskList.changeTask(index, new Task(name.getText().toString(), myDate, description.getText().toString()));
+                TaskList.getInstance().changeTask(index, new Task(name.getText().toString(), myDate, description.getText().toString()));
                 MainActivity.getTaskListAdapter().notifyDataSetChanged();
                 finish();
             }

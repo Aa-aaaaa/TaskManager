@@ -1,9 +1,13 @@
 package com.example.asus.taskmanager;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Task {
+public class Task
+{
     private MyDate time;
     private String description;
     private String name;

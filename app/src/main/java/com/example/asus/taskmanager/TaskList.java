@@ -1,5 +1,8 @@
 package com.example.asus.taskmanager;
 
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
