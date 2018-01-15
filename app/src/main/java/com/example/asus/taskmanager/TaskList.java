@@ -25,11 +25,12 @@ public class TaskList {
 
     public void addTask(Task task)
     {
+        MainActivity.getDataBase().addTask(task);
         this.arrayList.add(task);
         Collections.sort(arrayList, new Comparator<Task>() {
             public int compare(Task a, Task b)
             {
-                return (a.getTime().compareTo(b.getTime()));
+                return (a.getTime().myGetTime().compareTo(b.getTime().myGetTime()));
             }
         });
     }
@@ -45,19 +46,20 @@ public class TaskList {
     }
 
     public void deleteTask(int index) {
+        MainActivity.getDataBase().deleteTask(arrayList.get(index));
         this.arrayList.remove(index);
         Collections.sort(arrayList, new Comparator<Task>() {
             public int compare(Task a, Task b)
             {
-                return (a.getTime().compareTo(b.getTime()));
+                return (a.getTime().myGetTime().compareTo(b.getTime().myGetTime()));
             }
         });
     }
 
     public void changeTask(int index, Task newTask)
     {
+        MainActivity.getDataBase().updateTask(arrayList.get(index), newTask);
         deleteTask(index);
         addTask(newTask);
     }
-
 }

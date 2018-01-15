@@ -11,17 +11,20 @@ public class Task
     private MyDate time;
     private String description;
     private String name;
+    private int id;
 
     public Task() {
         this.time = new MyDate();
         this.description = "";
         this.name = "";
+        this.id = 0;
     }
 
-    public Task(String name, MyDate time, String description) {
+    public Task(String name, MyDate time, String description, int id) {
         this.time = time;
         this.description = description;
         this.name = name;
+        this.id = id;
     }
 
     public boolean stringToTime(String s) {
@@ -58,6 +61,11 @@ public class Task
 
     public String getName() {
         return this.name;
+    }
+
+    public int getId()
+    {
+        return this.id;
     }
 
     public void setDescription(String description) {
