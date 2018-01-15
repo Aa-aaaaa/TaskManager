@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Maxim on 14.01.2018.
@@ -23,23 +24,11 @@ public class DataBase extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     private static final String TAG = "DataBase";
 
-    private int size;
     private SQLiteDatabase db;
-
-    public int getSize()
-    {
-        return this.size;
-    }
-
-    public void incSize()
-    {
-        this.size++;
-    }
 
     public DataBase(Context context) {
         super(context, db_name, null, DATABASE_VERSION);
         db = this.getWritableDatabase();
-        this.size = 0;
     }
 
     @Override
@@ -53,25 +42,23 @@ public class DataBase extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_name);
         onCreate(sqLiteDatabase);
     }
-    public void takeAllNotesFomDataBase(TaskList taskList)
+    public ArrayList<Task> getAllNotesFromDataBase()
     {
-        //Commemt to commit
-        //Cursor cursor = sqLiteDatabase.query(table_name, null, null, null, null, null, null);
-        Cursor cursor = db.rawQuery("SELECT " + table_name + "." + key_name + " AS NAME, " + table_name + "." + key_date + " AS DATE, " + table_name + "." + key_description + " AS DESCRIPTION FROM "  +table_name, null);
+        ArrayList <Task> taskList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + table_name, null);
         boolean hasNextStep = cursor.moveToFirst();
-        Log.d(TAG, "Taking notes from data base started");
         while (hasNextStep)
         {
-            String name = cursor.getString(cursor.getColumnIndex("NAME"));
-            Date date = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndex("DATE"))));
-            String description = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
-            Log.d(TAG, "Note" + name + " " + date + " " + description + " was made");
-            taskList.addTask(new Task(name, date, description, this.getSize()));
-            this.incSize();
+            String name = cursor.getString(cursor.getColumnIndex(key_name));
+            MyDate date = new MyDate();
+            date.setString(cursor.getString(cursor.getColumnIndex(key_date)));
+            String description = cursor.getString(cursor.getColumnIndex(key_description));
+            Long dataBaseId = cursor.getLong(cursor.getColumnIndex("_ID"));
+            taskList.add(new Task(name, date, description, dataBaseId));
             hasNextStep = cursor.moveToNext();
         }
         cursor.close();
-        Log.d(TAG, "Taking notes from data base finished");
+        return taskList;
     }
 
     public void addTask(Task task)
@@ -80,23 +67,38 @@ public class DataBase extends SQLiteOpenHelper {
         newValues.put(key_name, task.getName());
         newValues.put(key_date, String.valueOf(task.getTime()));
         newValues.put(key_description, task.getDescription());
-        db.insert(table_name, null, newValues);
-        Log.d(TAG, "Note" + task.getName() + " " + task.getTime() + " " + task.getDescription() + " added");
+        task.setDataBaseId(db.insert(table_name, null, newValues));
+
+        Log.d(TAG, "ID " + task.getDataBaseId() + " name: " + task.getName() + " " + task.getTime() + " " + task.getDescription() + " added");
     }
-    public void updateTask(Task oldTask, Task newTask)
+    public void updateTask(Task task)
     {
         ContentValues newValues = new ContentValues();
-        newValues.put(key_name, newTask.getName());
-        newValues.put(key_date, String.valueOf(newTask.getTime()));
-        newValues.put(key_description, newTask.getDescription());
-        db.update(table_name, newValues, "_ID = ?", new String[] {String.valueOf(oldTask.getId())});
-        Log.d(TAG, "Note" + oldTask.getName() + " " + oldTask.getTime() + " " + oldTask.getDescription() + " removed");
-        Log.d(TAG, "Note" + newTask.getName() + " " + newTask.getTime() + " " + newTask.getDescription() + " added");
+        newValues.put(key_name, task.getName());
+        newValues.put(key_date, String.valueOf(task.getTime()));
+        newValues.put(key_description,task.getDescription());
+        db.update(table_name, newValues, "_ID = ?", new String[] {Long.toString(task.getDataBaseId())});
     }
 
-    public void deleteTask(Task oldTask)
+    public void deleteTask(long dataBaseId)
     {
-        db.delete(table_name, "_ID = ?", new String[] {String.valueOf(oldTask.getId())});
-        Log.d(TAG, "Note" + oldTask.getName() + " " + oldTask.getTime() + " " + oldTask.getDescription() + " removed");
+        db.delete(table_name, "_ID = ?", new String[] {Long.toString(dataBaseId)});
     }
+
+    public Task getTaskById(long dataBaseId)
+    {
+        Cursor cursor = db.rawQuery("SELECT * FROM " + table_name +
+                " WHERE " + table_name + "._ID = " + Long.toString(dataBaseId), null);
+        Log.d(TAG, Long.toString(dataBaseId));
+        Log.d(TAG, Boolean.toString(cursor.moveToFirst()));
+        MyDate date = new MyDate();
+        date.stringToTime(cursor.getString(cursor.getColumnIndex(key_date))); //HOW TO MAKE IT LOOKS NORMAL???
+        Task task = new Task(
+                cursor.getString(cursor.getColumnIndex(key_name)),
+                date,
+                cursor.getString(cursor.getColumnIndex(key_description)),
+                cursor.getLong(cursor.getColumnIndex("_ID")));
+        cursor.close();
+        return task;
+    }//
 }

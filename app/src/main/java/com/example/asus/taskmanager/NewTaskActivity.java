@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static android.media.RingtoneManager.TYPE_NOTIFICATION;
+import static java.lang.Math.toIntExact;
 
 public class NewTaskActivity extends AppCompatActivity {
 
@@ -51,7 +52,7 @@ public class NewTaskActivity extends AppCompatActivity {
                     TaskList.getInstance().addTask(task);
 
                     Intent intent = new Intent(NewTaskActivity.this, TaskShowActivity.class);
-                    // NEED TO COMMIT intent.putExtra("index", TaskList.getInstance().);
+                    intent.putExtra("dataBaseId", task.getDataBaseId());
                     PendingIntent pendingIntent = PendingIntent.
                             getActivity(NewTaskActivity.this, 0, intent,
                                     PendingIntent.FLAG_UPDATE_CURRENT);
@@ -63,16 +64,17 @@ public class NewTaskActivity extends AppCompatActivity {
                                     setTicker(name.getText().toString()).
                                     setContentText(description.getText().toString()).
                                     setSmallIcon(R.drawable.ic_launcher_background).
-                                    setSound(RingtoneManager.getDefaultUri(TYPE_NOTIFICATION));
+                                    setSound(RingtoneManager.getDefaultUri(TYPE_NOTIFICATION)).
+                                    setAutoCancel(true);
 
                     MainActivity.getTaskListAdapter().notifyDataSetChanged();
-                    scheduleNotification(builder.build(), 1 , 5 * 1000 * 60);
+                    scheduleNotification(builder.build(), task.getDataBaseId() , 7 * 1000);
                     finish();
                 }
             }
         });
     }
-    public void scheduleNotification(Notification notification, int notificationId, long delay)
+    public void scheduleNotification(Notification notification, long notificationId, long delay)
     {
         long futureTime = Calendar.getInstance().getTimeInMillis() + delay;
 

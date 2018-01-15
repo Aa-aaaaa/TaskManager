@@ -10,10 +10,12 @@ public class MyDate extends Date{
 
     public MyDate(Date time) {
         this.time = time;
+        timeToString(time);
     }
 
     public MyDate() {
         this.time = new Date();
+        timeToString(time);
     }
 
     public boolean stringToTime(String s) {
