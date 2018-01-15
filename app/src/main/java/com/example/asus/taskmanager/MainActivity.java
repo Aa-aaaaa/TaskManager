@@ -13,12 +13,12 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
 {
-    static private TaskList taskList = new TaskList();
     static private TaskListAdapter taskListAdapter;
     static private DataBase dataBase;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        final TaskList taskList = TaskList.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         dataBase = new DataBase(MainActivity.this);
@@ -49,8 +49,10 @@ public class MainActivity extends AppCompatActivity
         );
     }
 
-    public static TaskList getTaskList() {
-        return taskList;
+    @Override
+    protected void onResume() {
+        taskListAdapter.notifyDataSetChanged();
+        super.onResume();
     }
 
     public static TaskListAdapter getTaskListAdapter() {

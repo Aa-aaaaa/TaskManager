@@ -7,10 +7,17 @@ import java.util.Comparator;
 import java.util.TreeSet;
 
 public class TaskList {
+    private static TaskList taskList;
     private ArrayList<Task> arrayList;
 
-    public TaskList() {
+    private TaskList() {
         this.arrayList = new ArrayList<>();
+    }
+
+    public static TaskList getInstance() {
+        if (taskList == null)
+            taskList = new TaskList();
+        return taskList;
     }
 
     public void addTask(Task task)
@@ -20,7 +27,7 @@ public class TaskList {
         Collections.sort(arrayList, new Comparator<Task>() {
             public int compare(Task a, Task b)
             {
-                return (a.getTime().compareTo(b.getTime()));
+                return (a.getTime().myGetTime().compareTo(b.getTime().myGetTime()));
             }
         });
     }
@@ -29,7 +36,7 @@ public class TaskList {
     {
         return arrayList.get(index);
     }
-    
+
     public int getSize()
     {
         return arrayList.size();
@@ -41,7 +48,7 @@ public class TaskList {
         Collections.sort(arrayList, new Comparator<Task>() {
             public int compare(Task a, Task b)
             {
-                return (a.getTime().compareTo(b.getTime()));
+                return (a.getTime().myGetTime().compareTo(b.getTime().myGetTime()));
             }
         });
     }

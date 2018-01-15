@@ -35,22 +35,16 @@ public class NewTaskActivity extends AppCompatActivity {
                     Toast.makeText(NewTaskActivity.this, "Empty name of task", Toast.LENGTH_SHORT).show();
                     b = true;
                 }
-                Date date = null;
-                try
+                MyDate myDate = new MyDate();
+                if (!myDate.stringToTime(data.getText().toString()))
                 {
-                    date = new Date(Long.parseLong(data.getText().toString()));
-                }
-                catch (Exception e)
-                {
-                    //e.getStackTrace();
-                    Toast.makeText(NewTaskActivity.this, "Non-numeric symbols found in date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewTaskActivity.this, "Bad date", Toast.LENGTH_SHORT).show();
                     b = true;
                 }
                 if (!b)
                 {
-                    Task task = new Task(name.getText().toString(), date, description.getText().toString(), MainActivity.getDataBase().getSize());
-                    MainActivity.getTaskList().addTask(task);
-                    MainActivity.getTaskListAdapter().notifyDataSetChanged();
+                    Task task = new Task(name.getText().toString(), myDate, description.getText().toString());
+                    TaskList.getInstance().addTask(task);
                     //commemt to commit
                     finish();
                 }
