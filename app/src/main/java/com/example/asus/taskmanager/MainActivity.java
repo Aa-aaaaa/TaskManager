@@ -15,13 +15,16 @@ public class MainActivity extends AppCompatActivity
 {
     static private TaskListAdapter taskListAdapter;
     static private DataBase dataBase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         final TaskList taskList = TaskList.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        dataBase = new DataBase(MainActivity.this);
+        dataBase = new DataBase(this);
+        //dataBase.deleteAll();
+        //dataBase.onCreate(null);
         dataBase.takeAllNotesFomDataBase(taskList);
 
         taskListAdapter = new TaskListAdapter(taskList);

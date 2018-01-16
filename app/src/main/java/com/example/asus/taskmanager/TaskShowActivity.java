@@ -44,7 +44,7 @@ public class TaskShowActivity extends AppCompatActivity {
                     Toast.makeText(TaskShowActivity.this, "Bad date", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                taskList.changeTask(index, new Task(name.getText().toString(), myDate, description.getText().toString()));
+                taskList.changeTask(index, new Task(name.getText().toString(), myDate, description.getText().toString(), MainActivity.getDataBase().getSize()));
                 finish();
             }
         });

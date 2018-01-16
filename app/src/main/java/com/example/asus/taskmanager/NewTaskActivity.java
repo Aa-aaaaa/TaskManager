@@ -43,7 +43,8 @@ public class NewTaskActivity extends AppCompatActivity {
                 }
                 if (!b)
                 {
-                    Task task = new Task(name.getText().toString(), myDate, description.getText().toString());
+                    Task task = new Task(name.getText().toString(), myDate, description.getText().toString(), MainActivity.getDataBase().getSize());
+                    MainActivity.getDataBase().incSize();
                     TaskList.getInstance().addTask(task);
                     //commemt to commit
                     finish();
