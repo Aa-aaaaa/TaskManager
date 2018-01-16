@@ -56,7 +56,6 @@ public class DataBase extends SQLiteOpenHelper {
     }
     public void takeAllNotesFomDataBase(TaskList taskList)
     {
-        //Commemt to commit
         //Cursor cursor = sqLiteDatabase.query(table_name, null, null, null, null, null, null);
         taskList.clear();
         Cursor cursor = db.rawQuery("SELECT " + table_name + "." + key_name + " AS NAME, " + table_name + "." + key_date + " AS DATE, " + table_name + "." + key_description + " AS DESCRIPTION," + table_name + "." + key_id + " AS MYID FROM "  + table_name, null);
