@@ -21,12 +21,19 @@ public class TaskShowActivity extends AppCompatActivity {
 
         final Long dataBaseId = getIntent().getLongExtra("dataBaseId", 0);
         Log.d("OPENED 1", dataBaseId.toString());
+        Task task = TaskList.getInstance().getTask(dataBaseId);
+        if (task == null)
+        {
+            finish();
+            startActivity(new Intent(TaskShowActivity.this, MainActivity.class));
+            return;
+        }
         final EditText name = (EditText)findViewById(R.id.name);
-        name.setText(TaskList.getInstance().getTask(dataBaseId).getName());
+        name.setText(task.getName());
         final EditText time = (EditText)findViewById(R.id.time);
-        time.setText(TaskList.getInstance().getTask(dataBaseId).getTime().toString());
+        time.setText(task.getTime().toString());
         final EditText description = (EditText)findViewById(R.id.description);
-        description.setText(TaskList.getInstance().getTask(dataBaseId).getDescription());
+        description.setText(task.getDescription());
 
         ((Button)findViewById(R.id.buttonDeleteTask)).setOnClickListener(new View.OnClickListener() {
             @Override

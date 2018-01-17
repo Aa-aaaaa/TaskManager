@@ -89,6 +89,8 @@ public class DataBase extends SQLiteOpenHelper {
     {
         Cursor cursor = db.rawQuery("SELECT * FROM " + table_name +
                 " WHERE " + table_name + "._ID = " + Long.toString(dataBaseId), null);
+        if (cursor.getCount() == 0)
+            return null;
         cursor.moveToFirst();
         MyDate date = new MyDate();
         date.setTime(cursor.getString(cursor.getColumnIndex(key_date)));

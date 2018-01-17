@@ -47,21 +47,22 @@ public class NewTaskActivity extends AppCompatActivity {
             }
 
             Task task = new Task(name.getText().toString(), myDate, description.getText().toString());
+            boolean wantToSendNotification = false;
+            MyDate myNotificationDate = new MyDate();
             if (((CheckBox) findViewById(R.id.checkBoxNeedNotification)).isChecked()) {
-                MyDate myNotificationDate = new MyDate();
                 if (!myNotificationDate.setTime(notificationDate.getText().toString()) ||
-                        myDate.getTime() <= myNotificationDate.getTime() ||
+                        myDate.getTime() < myNotificationDate.getTime() ||
                         myNotificationDate.getTime() < new Date().getTime()) {
                     Toast.makeText(NewTaskActivity.this, "Bad notification date", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    TaskList.getInstance().addTask(task);
-                    MyNotification.getInstance().sendNotificationOfUpcomingTask(NewTaskActivity.this, task, myNotificationDate.getTime());
-                    finish();
+                    wantToSendNotification = true;
                 }
             }
             TaskList.getInstance().addTask(task);
             MainActivity.getTaskListAdapter().notifyDataSetChanged();
+            if (wantToSendNotification)
+                MyNotification.getInstance().sendNotificationOfUpcomingTask(NewTaskActivity.this, task, myNotificationDate.getTime());
             finish();
             }
         });
