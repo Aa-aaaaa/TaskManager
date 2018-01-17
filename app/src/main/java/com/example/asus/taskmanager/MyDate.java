@@ -9,11 +9,11 @@ public class MyDate extends Date{
     private String string;
 
     public MyDate(Date time) {
-        this.time = time;
+        this.timeToString(time);
     }
 
     public MyDate() {
-        this.time = new Date();
+        this.timeToString(new Date());
     }
 
     public boolean stringToTime(String s) {

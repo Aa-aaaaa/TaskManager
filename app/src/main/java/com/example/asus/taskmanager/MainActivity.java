@@ -1,6 +1,10 @@
 package com.example.asus.taskmanager;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,47 +14,59 @@ import android.widget.ListView;
 
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity
+import static com.example.asus.taskmanager.R.*;
+import static com.example.asus.taskmanager.R.id.*;
+
+public class MainActivity extends AppCompatActivity implements TaskListFragment.OnTaskListDataListener, TaskShowFragment.OnTaskShowDataListener
 {
-    static private TaskListAdapter taskListAdapter;
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+    final TaskListAdapter taskListAdapter = new TaskListAdapter(TaskList.getInstance());
+    TaskListFragment taskListFragment = new TaskListFragment();
+    TaskShowFragment taskShowFragment = new TaskShowFragment();
+    EmptyFragment emptyFragment = new EmptyFragment();
+    private boolean check_land()
     {
-        final TaskList taskList = TaskList.getInstance();
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        taskListAdapter = new TaskListAdapter(taskList);
-
-        ((ListView)findViewById(R.id.taskList)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MainActivity.this, TaskShowActivity.class);
-                intent.putExtra("index", i);
-                startActivity(intent);
-            }
-        });
-        ((ListView)findViewById(R.id.taskList)).setAdapter(taskListAdapter);
-
-        ((Button)findViewById(R.id.buttonGoMakeNewTask)).
-                setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        Intent intent = new Intent(MainActivity.this, TaskShowActivity.class);
-                        taskList.addTaskNotSort(new Task());
-                        intent.putExtra("index", taskList.getSize() - 1);
-                        startActivity(intent);
-                    }
-                }
-        );
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(layout.activity_main);
+        if (check_land())
+            getFragmentManager().beginTransaction().replace(id.other, emptyFragment).commit();
+        getFragmentManager().beginTransaction().replace(id.list, taskListFragment).commit();
+    }
+
+    @Override
+    public void onTaskListDataListener(Bundle bundle) {
+        if (taskShowFragment.isAdded())
+        {
+            getFragmentManager().beginTransaction().remove(taskShowFragment).commit();
+            if (check_land())
+                getFragmentManager().beginTransaction().add(R.id.other, emptyFragment).commit();
+        }
+        taskShowFragment = new TaskShowFragment();
+        taskShowFragment.setIndex(bundle.getInt("index"));
+        if (check_land())
+            getFragmentManager().beginTransaction().replace(R.id.other, taskShowFragment).addToBackStack(null).commit();
+        else
+            getFragmentManager().beginTransaction().replace(id.list, taskShowFragment).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void onTaskShowDataListener() { 
+        taskListAdapter.notifyDataSetChanged();
+        if (check_land())
+            getFragmentManager().beginTransaction().replace(id.other, emptyFragment).commit();
+        taskListFragment = new TaskListFragment();
+        getFragmentManager().beginTransaction().replace(id.list, taskListFragment).commit();
+    }
+
+/*    @Override
     protected void onResume() {
         taskListAdapter.notifyDataSetChanged();
         super.onResume();
     }
-
+*/
 }
