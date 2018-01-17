@@ -1,60 +1,52 @@
 package com.example.asus.taskmanager;
 
+import android.util.Log;
+
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MyDate extends Date{
-    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     private Date time;
-    private String string;
 
     public MyDate(Date time) {
         this.time = time;
-        timeToString(time);
     }
 
     public MyDate() {
         this.time = new Date();
-        timeToString(time);
     }
 
-    public boolean stringToTime(String s) {
-        Date t = new Date(), timeNow, timeFromString, ans = new Date(0);
-        String stringTimeNow = simpleDateFormat.format(t);
+    public MyDate(long exactTime)
+    {
+        time = new Date();
+        time.setTime(exactTime);
+    }
+
+    @Override
+    public String toString() {
+        return simpleDateFormat.format(time);
+    }
+
+    public void setTime(Long time) {
+        this.time.setTime(time);
+    }
+
+    public boolean setTime(String s)
+    {
         try {
-            timeNow = simpleDateFormat.parse(stringTimeNow);
-            timeFromString = simpleDateFormat.parse(s);
-            if (timeNow.compareTo(timeFromString) >= 0
-                    || (!s.equals(simpleDateFormat.format(timeFromString))))
-                return false;
-            this.time =  new Date(t.getTime() + timeFromString.getTime() - timeNow.getTime());
-            this.string = s;
+            Date timeFromString = new Date(simpleDateFormat.parse(s).getTime());
+            time = new Date(timeFromString.getTime());
         }
         catch (Exception e) {
             return false;
         }
         return true;
     }
-
-    public void timeToString(Date time)
+    @Override
+    public long getTime()
     {
-        this.string = simpleDateFormat.format(time);
-        this.time = time;
-    }
-
-    public Date myGetTime(){
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.timeToString(time);
-    }
-
-    public String getString() {
-        return string;
-    }
-
-    public void setString(String string) {
-        this.stringToTime(string);
+        return time.getTime();
     }
 }

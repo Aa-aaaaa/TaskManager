@@ -17,6 +17,6 @@
         </activity>
         <activity android:name=".NewTaskActivity"></activity>
         <activity android:name=".TaskShowActivity"></activity>
-        <receiver android:name="NotificationPublisher" />
+        <receiver android:name=".NotificationPublisher"/>
     </application>
 </manifest>

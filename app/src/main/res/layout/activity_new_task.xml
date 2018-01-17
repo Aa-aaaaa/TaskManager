@@ -13,7 +13,6 @@
         android:layout_weight="1"
         android:ems="10"
         android:hint="@string/name"
-        android:inputType="textPersonName"
         android:text="" />
 
     <EditText
@@ -22,8 +21,30 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="@string/date" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <EditText
+            android:id="@+id/editTextNotificationDate"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="7"
+            android:ems="10"
+            android:hint="Notification date" />
+
+        <CheckBox
+            android:id="@+id/checkBoxNeedNotification"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="" />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/editTextDescription"
@@ -32,7 +53,6 @@
         android:layout_weight="7"
         android:ems="10"
         android:hint="@string/description"
-        android:inputType="textPersonName"
         android:text="" />
 
     <Button

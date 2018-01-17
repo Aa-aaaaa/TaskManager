@@ -22,7 +22,7 @@ public class TaskListAdapter extends BaseAdapter
         Collections.sort(this.taskList, new Comparator<Task>() {
             public int compare(Task a, Task b)
             {
-                return (a.getTime().myGetTime().compareTo(b.getTime().myGetTime()));
+                return (a.getTime().compareTo(b.getTime()));
             }
         });
     }
@@ -48,7 +48,7 @@ public class TaskListAdapter extends BaseAdapter
         Collections.sort(taskList, new Comparator<Task>() {
             public int compare(Task a, Task b)
             {
-                return (a.getTime().myGetTime().compareTo(b.getTime().myGetTime()));
+                return (a.getTime().compareTo(b.getTime()));
             }
         });
         super.notifyDataSetChanged();

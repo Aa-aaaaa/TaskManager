@@ -46,7 +46,7 @@ public class Task
         return this.name;
     }
 
-    public Long getDataBaseId()
+    public long getDataBaseId()
     {
         return dataBaseId;
     }
@@ -60,7 +60,7 @@ public class Task
         this.name = name;
     }
 
-    public void setTime(Date time) {
+    public void setTime(long time) {
         this.time.setTime(time);
     }
 

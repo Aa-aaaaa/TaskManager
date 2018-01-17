@@ -20,11 +20,11 @@ public class TaskShowActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_task);
 
         final Long dataBaseId = getIntent().getLongExtra("dataBaseId", 0);
-        Log.d("Deb", dataBaseId.toString());
+        Log.d("OPENED 1", dataBaseId.toString());
         final EditText name = (EditText)findViewById(R.id.name);
         name.setText(TaskList.getInstance().getTask(dataBaseId).getName());
         final EditText time = (EditText)findViewById(R.id.time);
-        time.setText(TaskList.getInstance().getTask(dataBaseId).getTime().getString());
+        time.setText(TaskList.getInstance().getTask(dataBaseId).getTime().toString());
         final EditText description = (EditText)findViewById(R.id.description);
         description.setText(TaskList.getInstance().getTask(dataBaseId).getDescription());
 
@@ -41,7 +41,7 @@ public class TaskShowActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 MyDate myDate = new MyDate();
-                if (!myDate.stringToTime(time.getText().toString()))
+                if (!myDate.setTime(time.getText().toString()))
                 {
                     Toast.makeText(TaskShowActivity.this, "Bad date", Toast.LENGTH_SHORT).show();
                     return;
