@@ -31,22 +31,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
 
     private void startAll()
     {
-/*        //для возвращения назад
-        if (check_land())
-        {
-            fragmentsNow.set(true, false, true);
-            getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getEF()).commit();
-            getFragmentManager().beginTransaction().replace(id.list, fragmentsNow.getTLF()).commit();
-            getFragmentManager().beginTransaction().remove(fragmentsNow.getEF()).addToBackStack(null).commit();
-        }
-        else
-        {
-            fragmentsNow.set(true, false, false);
-            getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTLF()).commit();
-            getFragmentManager().beginTransaction().remove(fragmentsNow.getTLF()).addToBackStack(null).commit();
-        }
-*/
-        if (fragmentsNow.getTSF() == null) {
+      if (fragmentsNow.getTSF() == null) {
             if (check_land()) {
                 fragmentsNow.set(true, false, true);
                 getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getEF()).commit();
@@ -70,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
                 getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTSF()).commit();
             }
         }
+        fragmentsNow.setCloseAll(false);
     }
 
     @Override
@@ -95,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
             fragmentsNow.setTSF(bundle.getInt("index"));
             getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTSF()).commit();
         }
+        fragmentsNow.setCloseAll(false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -112,5 +99,25 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
             fragmentsNow.set(true, false, false);
             getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTLF()).commit();
         }
+        fragmentsNow.setCloseAll(false);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (check_land())
+        {
+            fragmentsNow.set(true, false, true);
+            getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getEF()).commit();
+            getFragmentManager().beginTransaction().replace(id.list, fragmentsNow.getTLF()).commit();
+        }
+        else
+        {
+            fragmentsNow.set(true, false, false);
+            getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTLF()).commit();
+        }
+        if (fragmentsNow.isCloseAll())
+            super.onBackPressed();
+        fragmentsNow.setCloseAll(true);
     }
 }
