@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Maxim on 14.01.2018.
@@ -20,32 +21,19 @@ public class DataBase extends SQLiteOpenHelper {
     public static final String key_name = "NAME";
     public static final String key_date = "DATE";
     public static final String key_description = "DESCRIPTION";
-    public static final String key_id = "MYID";
     public static final int DATABASE_VERSION = 1;
     private static final String TAG = "DataBase";
 
-    private int size;
     private SQLiteDatabase db;
-
-    public int getSize()
-    {
-        return this.size;
-    }
-
-    public void incSize()
-    {
-        this.size++;
-    }
 
     public DataBase(Context context) {
         super(context, db_name, null, DATABASE_VERSION);
         db = this.getWritableDatabase();
-        this.size = 0;
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        db.execSQL("CREATE TABLE " + table_name +"(_ID INTEGER PRIMARY KEY AUTOINCREMENT, " + key_name + " TEXT, " + key_date + " TEXT, " + key_description + " TEXT, " + key_id + " INTEGER);");
+        sqLiteDatabase.execSQL("CREATE TABLE " + table_name +"(_ID INTEGER PRIMARY KEY AUTOINCREMENT, " + key_name + " TEXT, " + key_date + " TEXT, " + key_description + " TEXT);");
         Log.d(TAG, "Table is created");
     }
 
@@ -54,29 +42,24 @@ public class DataBase extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_name);
         onCreate(sqLiteDatabase);
     }
-    public void takeAllNotesFomDataBase(TaskList taskList)
+    public ArrayList<Task> getAllNotesFromDataBase()
     {
-        //Cursor cursor = sqLiteDatabase.query(table_name, null, null, null, null, null, null);
-        taskList.clear();
-        Cursor cursor = db.rawQuery("SELECT " + table_name + "." + key_name + " AS NAME, " + table_name + "." + key_date + " AS DATE, " + table_name + "." + key_description + " AS DESCRIPTION," + table_name + "." + key_id + " AS MYID FROM "  + table_name, null);
+        ArrayList <Task> taskList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + table_name, null);
         boolean hasNextStep = cursor.moveToFirst();
         Log.d(TAG, "Taking notes from data base started");
         while (hasNextStep)
         {
-            String name = cursor.getString(cursor.getColumnIndex("NAME"));
+            String name = cursor.getString(cursor.getColumnIndex(key_name));
             MyDate date = new MyDate();
-            date.setString((cursor.getString(cursor.getColumnIndex("DATE"))));
-            String description = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
-            int x = cursor.getInt(cursor.getColumnIndex("MYID"));
-            Log.d(TAG, "Note" + name + " " + date + " " + description + " was made with id/t" + x);
-            taskList.addTaskWithoutDB(new Task(name, date, description, x));
-            if (this.size <= x)
-                this.size = x + 1;
-            this.incSize();
+            date.setString(cursor.getString(cursor.getColumnIndex(key_date)));
+            String description = cursor.getString(cursor.getColumnIndex(key_description));
+            Long dataBaseId = cursor.getLong(cursor.getColumnIndex("_ID"));
+            taskList.add(new Task(name, date, description, dataBaseId));
             hasNextStep = cursor.moveToNext();
         }
         cursor.close();
-        Log.d(TAG, "Taking notes from data base finished");
+        return taskList;
     }
 
     public void addTask(Task task)
@@ -85,36 +68,38 @@ public class DataBase extends SQLiteOpenHelper {
         newValues.put(key_name, task.getName());
         newValues.put(key_date, task.getTime().getString());
         newValues.put(key_description, task.getDescription());
-        newValues.put(key_id, task.getId());
-        db.insert(table_name, null, newValues);
-        Log.d(TAG, "Note " + task.getName() + " " + task.getTime() + " " + task.getDescription() + " added");
+        task.setDataBaseId(db.insert(table_name, null, newValues));
+
+        Log.d(TAG, "ID " + task.getDataBaseId() + " name: " + task.getName() + " " + task.getTime() + " " + task.getDescription() + " added");
     }
-    /*public void updateTask(Task oldTask, Task newTask)
+    public void updateTask(Task task)
     {
         ContentValues newValues = new ContentValues();
-        newValues.put(key_name, newTask.getName());
-        newValues.put(key_date, newTask.getTime().getString());
-        newValues.put(key_description, newTask.getDescription());
-        db.update(table_name, newValues, "_ID = ?", new String[] {String.valueOf(oldTask.getId())});
-        Log.d(TAG, "Note" + oldTask.getName() + " " + oldTask.getTime() + " " + oldTask.getDescription() + " removed");
-        Log.d(TAG, "Note" + newTask.getName() + " " + newTask.getTime() + " " + newTask.getDescription() + " added");
-    }*/
-
-    public void deleteTask(Task oldTask)
-    {
-        String[] ms = new String[] {Integer.toString(oldTask.getId())};
-        //int a = db.delete(table_name, table_name + "._ID = ?", new String[]{"1"});
-        int a = db.delete(table_name, table_name + "." + key_id +" = ?", ms);
-        /*a += db.delete(table_name, table_name + "._ID = 2", null);
-        a += db.delete(table_name, table_name + "._ID = 3", null);
-        a += db.delete(table_name, table_name + "._ID = 4", null);
-        a += db.delete(table_name, table_name + "._ID = ?", ms);*/
-        Log.d(TAG, "Note " + oldTask.getName() + " " + oldTask.getTime() + " " + oldTask.getDescription() + " removed");
-        Log.d(TAG, "" + a);
+        newValues.put(key_name, task.getName());
+        newValues.put(key_date, String.valueOf(task.getTime()));
+        newValues.put(key_description,task.getDescription());
+        db.update(table_name, newValues, "_ID = ?", new String[] {Long.toString(task.getDataBaseId())});
     }
 
-    public void deleteAll()
+    public void deleteTask(long dataBaseId)
     {
-        onUpgrade(this.db, 0, 0);
+        db.delete(table_name, "_ID = ?", new String[] {Long.toString(dataBaseId)});
     }
+
+    public Task getTaskById(long dataBaseId)
+    {
+        Cursor cursor = db.rawQuery("SELECT * FROM " + table_name +
+                " WHERE " + table_name + "._ID = " + Long.toString(dataBaseId), null);
+        Log.d(TAG, Long.toString(dataBaseId));
+        Log.d(TAG, Boolean.toString(cursor.moveToFirst()));
+        MyDate date = new MyDate();
+        date.stringToTime(cursor.getString(cursor.getColumnIndex(key_date))); //HOW TO MAKE IT LOOKS NORMAL???
+        Task task = new Task(
+                cursor.getString(cursor.getColumnIndex(key_name)),
+                date,
+                cursor.getString(cursor.getColumnIndex(key_description)),
+                cursor.getLong(cursor.getColumnIndex("_ID")));
+        cursor.close();
+        return task;
+    }//
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -22,18 +23,18 @@ public class MainActivity extends AppCompatActivity
         final TaskList taskList = TaskList.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        dataBase = new DataBase(this);
+        dataBase = new DataBase(MainActivity.this);
         //dataBase.deleteAll();
-        //dataBase.onCreate(null);
-        dataBase.takeAllNotesFomDataBase(taskList);
-
-        taskListAdapter = new TaskListAdapter(taskList);
+        taskListAdapter = new TaskListAdapter(dataBase.getAllNotesFromDataBase());
 
         ((ListView)findViewById(R.id.taskList)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MainActivity.this, TaskShowActivity.class);
-                intent.putExtra("index", i);
+                Log.d("neBl", Integer.toString(taskListAdapter.getCount()));
+                Log.d("neBl", "" + taskListAdapter.getItem(i).getDataBaseId());
+                //Log.d("BLYAT", taskListAdapter.getItem(i).getDataBaseId().toString());
+                intent.putExtra("dataBaseId", taskListAdapter.getItem(i).getDataBaseId());
                 startActivity(intent);
             }
         });

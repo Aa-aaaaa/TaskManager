@@ -2,6 +2,9 @@ package com.example.asus.taskmanager;
 
 import android.content.Context;
 
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,11 +13,6 @@ import java.util.TreeSet;
 
 public class TaskList {
     private static TaskList taskList;
-    private ArrayList<Task> arrayList;
-
-    private TaskList() {
-        this.arrayList = new ArrayList<>();
-    }
 
     public static TaskList getInstance() {
         if (taskList == null) {
@@ -27,55 +25,24 @@ public class TaskList {
     public void addTask(Task task)
     {
         MainActivity.getDataBase().addTask(task);
-        this.arrayList.add(task);
-        Collections.sort(arrayList, new Comparator<Task>() {
-            public int compare(Task a, Task b)
-            {
-                return (a.getTime().myGetTime().compareTo(b.getTime().myGetTime()));
-            }
-        });
     }
 
-    public void addTaskWithoutDB(Task task)
+    public Task getTask(long dataBaseId)
     {
-        this.arrayList.add(task);
-        Collections.sort(arrayList, new Comparator<Task>() {
-            public int compare(Task a, Task b)
-            {
-                return (a.getTime().myGetTime().compareTo(b.getTime().myGetTime()));
-            }
-        });
+        return MainActivity.getDataBase().getTaskById(dataBaseId);
     }
 
-    public Task getTask(int index)
-    {
-        return arrayList.get(index);
+    public void deleteTask(long dataBaseId) {
+        MainActivity.getDataBase().deleteTask(dataBaseId);
     }
 
-    public int getSize()
-    {
-        return arrayList.size();
+    public void deleteTask(Task task) {
+        MainActivity.getDataBase().deleteTask(task.getDataBaseId());
     }
 
-    public void deleteTask(int index) {
-        MainActivity.getDataBase().deleteTask(arrayList.get(index));
-        this.arrayList.remove(index);
-        Collections.sort(arrayList, new Comparator<Task>() {
-            public int compare(Task a, Task b)
-            {
-                return (a.getTime().myGetTime().compareTo(b.getTime().myGetTime()));
-            }
-        });
-    }
-
-    public void changeTask(int index, Task newTask)
+    public void changeTask(Task newTask)
     {
-        deleteTask(index);
-        addTask(newTask);
-    }
-    public void clear()
-    {
-        arrayList.clear();
+        MainActivity.getDataBase().updateTask(newTask);
     }
 
     /*private static void makeDB(Context context)
