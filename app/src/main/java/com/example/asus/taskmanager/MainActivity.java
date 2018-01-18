@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,12 +22,54 @@ import static com.example.asus.taskmanager.R.id.*;
 public class MainActivity extends AppCompatActivity implements TaskListFragment.OnTaskListDataListener, TaskShowFragment.OnTaskShowDataListener
 {
     final TaskListAdapter taskListAdapter = new TaskListAdapter(TaskList.getInstance());
-    TaskListFragment taskListFragment = new TaskListFragment();
-    TaskShowFragment taskShowFragment = new TaskShowFragment();
-    EmptyFragment emptyFragment = new EmptyFragment();
+    private FragmentsNow fragmentsNow = FragmentsNow.getInstance();
+
     private boolean check_land()
     {
         return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    private void startAll()
+    {
+/*        //для возвращения назад
+        if (check_land())
+        {
+            fragmentsNow.set(true, false, true);
+            getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getEF()).commit();
+            getFragmentManager().beginTransaction().replace(id.list, fragmentsNow.getTLF()).commit();
+            getFragmentManager().beginTransaction().remove(fragmentsNow.getEF()).addToBackStack(null).commit();
+        }
+        else
+        {
+            fragmentsNow.set(true, false, false);
+            getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTLF()).commit();
+            getFragmentManager().beginTransaction().remove(fragmentsNow.getTLF()).addToBackStack(null).commit();
+        }
+*/
+        if (fragmentsNow.getTSF() == null) {
+            if (check_land()) {
+                fragmentsNow.set(true, false, true);
+                getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getEF()).commit();
+                getFragmentManager().beginTransaction().replace(id.list, fragmentsNow.getTLF()).commit();
+            }
+            else {
+                fragmentsNow.set(true, false, false);
+                getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTLF()).commit();
+            }
+        }
+        else {
+            if (check_land())
+            {
+                fragmentsNow.set(true, true, false);
+                getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTSF()).commit();
+                getFragmentManager().beginTransaction().replace(id.list, fragmentsNow.getTLF()).commit();
+            }
+            else
+            {
+                fragmentsNow.set(false, true, false);
+                getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTSF()).commit();
+            }
+        }
     }
 
     @Override
@@ -33,40 +77,40 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_main);
-        if (check_land())
-            getFragmentManager().beginTransaction().replace(id.other, emptyFragment).commit();
-        getFragmentManager().beginTransaction().replace(id.list, taskListFragment).commit();
+        startAll();
     }
 
     @Override
     public void onTaskListDataListener(Bundle bundle) {
-        if (taskShowFragment.isAdded())
+        if (check_land())
         {
-            getFragmentManager().beginTransaction().remove(taskShowFragment).commit();
-            if (check_land())
-                getFragmentManager().beginTransaction().add(R.id.other, emptyFragment).commit();
+            fragmentsNow.set(true, true, false);
+            fragmentsNow.setTSF(bundle.getInt("index"));
+            getFragmentManager().beginTransaction().replace(id.list, fragmentsNow.getTLF()).commit();
+            getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTSF()).commit();
         }
-        taskShowFragment = new TaskShowFragment();
-        taskShowFragment.setIndex(bundle.getInt("index"));
-        if (check_land())
-            getFragmentManager().beginTransaction().replace(R.id.other, taskShowFragment).addToBackStack(null).commit();
         else
-            getFragmentManager().beginTransaction().replace(id.list, taskShowFragment).addToBackStack(null).commit();
+        {
+            fragmentsNow.set(false, true, false);
+            fragmentsNow.setTSF(bundle.getInt("index"));
+            getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTSF()).commit();
+        }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void onTaskShowDataListener() { 
+    public void onTaskShowDataListener() {
         taskListAdapter.notifyDataSetChanged();
         if (check_land())
-            getFragmentManager().beginTransaction().replace(id.other, emptyFragment).commit();
-        taskListFragment = new TaskListFragment();
-        getFragmentManager().beginTransaction().replace(id.list, taskListFragment).commit();
+        {
+            fragmentsNow.set(true, false, true);
+            getFragmentManager().beginTransaction().replace(id.list, fragmentsNow.getTLF()).commit();
+            getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getEF()).commit();
+        }
+        else
+        {
+            fragmentsNow.set(true, false, false);
+            getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTLF()).commit();
+        }
     }
-
-/*    @Override
-    protected void onResume() {
-        taskListAdapter.notifyDataSetChanged();
-        super.onResume();
-    }
-*/
 }
