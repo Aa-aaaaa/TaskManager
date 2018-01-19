@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Maxim on 14.01.2018.
@@ -55,7 +57,7 @@ public class DataBase extends SQLiteOpenHelper {
         {
             String name = cursor.getString(cursor.getColumnIndex(key_name));
             MyDate date = new MyDate();
-            date.setString(cursor.getString(cursor.getColumnIndex(key_date)));
+            date.setTime(cursor.getString(cursor.getColumnIndex(key_date)));
             String description = cursor.getString(cursor.getColumnIndex(key_description));
             Long dataBaseId = cursor.getLong(cursor.getColumnIndex("_ID"));
             Long globalDataBaseId = cursor.getLong(cursor.getColumnIndex(key_global_id));
@@ -72,7 +74,7 @@ public class DataBase extends SQLiteOpenHelper {
     {
         ContentValues newValues = new ContentValues();
         newValues.put(key_name, task.getName());
-        newValues.put(key_date, task.getTime().getString());
+        newValues.put(key_date, task.getTime().toString());
         newValues.put(key_description, task.getDescription());
         newValues.put(key_global_id, task.getGlobalDataBaseId());
         task.setDataBaseId(db.insert(table_name, null, newValues));
@@ -83,7 +85,7 @@ public class DataBase extends SQLiteOpenHelper {
     {
         ContentValues newValues = new ContentValues();
         newValues.put(key_name, task.getName());
-        newValues.put(key_date, String.valueOf(task.getTime()));
+        newValues.put(key_date, task.getTime().toString());
         newValues.put(key_description,task.getDescription());
         newValues.put(key_global_id, task.getGlobalDataBaseId());
         db.update(table_name, newValues, "_ID = ?", new String[] {Long.toString(task.getDataBaseId())});
@@ -98,10 +100,11 @@ public class DataBase extends SQLiteOpenHelper {
     {
         Cursor cursor = db.rawQuery("SELECT * FROM " + table_name +
                 " WHERE " + table_name + "._ID = " + Long.toString(dataBaseId), null);
-        Log.d(TAG, Long.toString(dataBaseId));
-        Log.d(TAG, Boolean.toString(cursor.moveToFirst()));
+        if (cursor.getCount() == 0)
+            return null;
+        cursor.moveToFirst();
         MyDate date = new MyDate();
-        date.stringToTime(cursor.getString(cursor.getColumnIndex(key_date))); //HOW TO MAKE IT LOOKS NORMAL???
+        date.setTime(cursor.getString(cursor.getColumnIndex(key_date)));
         Task task = new Task(
                 cursor.getString(cursor.getColumnIndex(key_name)),
                 date,

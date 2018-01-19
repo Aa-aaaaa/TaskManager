@@ -1,5 +1,8 @@
 package com.example.asus.taskmanager;
 
+import android.util.Log;
+
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -9,40 +12,45 @@ public class MyDate extends Date{
     private final SimpleDateFormat DBTimeFormat = new SimpleDateFormat("HH:mm");
     private final SimpleDateFormat DBFullFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private Date time;
-    private String string;
 
     public MyDate(Date time) {
         this.time = time;
-        timeToString(time);
     }
 
     public MyDate() {
         this.time = new Date();
-        timeToString(time);
     }
 
-    public boolean stringToTime(String s) {
-        Date t = new Date(), timeNow, timeFromString, ans = new Date(0);
-        String stringTimeNow = simpleDateFormat.format(t);
+    public MyDate(long exactTime)
+    {
+        time = new Date();
+        time.setTime(exactTime);
+    }
+
+    @Override
+    public String toString() {
+        return simpleDateFormat.format(time);
+    }
+
+    public void setTime(Long time) {
+        this.time.setTime(time);
+    }
+
+    public boolean setTime(String s)
+    {
         try {
-            timeNow = simpleDateFormat.parse(stringTimeNow);
-            timeFromString = simpleDateFormat.parse(s);
-            if (timeNow.compareTo(timeFromString) >= 0
-                    || (!s.equals(simpleDateFormat.format(timeFromString))))
-                return false;
-            this.time =  new Date(t.getTime() + timeFromString.getTime() - timeNow.getTime());
-            this.string = s;
+            Date timeFromString = new Date(simpleDateFormat.parse(s).getTime());
+            time = new Date(timeFromString.getTime());
         }
         catch (Exception e) {
             return false;
         }
         return true;
     }
-
-    public void timeToString(Date time)
+    @Override
+    public long getTime()
     {
-        this.string = simpleDateFormat.format(time);
-        this.time = time;
+        return time.getTime();
     }
 
     public Date myGetTime(){
@@ -50,15 +58,15 @@ public class MyDate extends Date{
     }
 
     public void setTime(Date time) {
-        this.timeToString(time);
+        this.setTime(time.getTime());
     }
 
     public String getString() {
-        return string;
+        return simpleDateFormat.format(time);
     }
 
     public void setString(String string) {
-        this.stringToTime(string);
+        this.setTime(string);
     }
 
     public String getStringForDB()
@@ -79,7 +87,6 @@ public class MyDate extends Date{
                     || (!s.equals(DBFullFormat.format(timeFromString))))
                 return false;
             this.time =  new Date(t.getTime() + timeFromString.getTime() - timeNow.getTime());
-            this.string = s;
         }
         catch (Exception e) {
             return false;

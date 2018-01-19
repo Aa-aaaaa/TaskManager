@@ -23,10 +23,16 @@
 
         <receiver android:name=".NotificationPublisher" />
 
+        <activity android:name=".LoginActivity">
+        </activity>
+
+        <receiver android:name=".NotificationPublisher" />
+
         <service
             android:name=".FoneService"
             android:enabled="true"
             android:exported="true"></service>
+        <activity android:name=".RegisterActivity" />
     </application>
 
 </manifest>

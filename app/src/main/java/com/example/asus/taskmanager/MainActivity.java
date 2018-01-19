@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -42,9 +43,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MainActivity.this, TaskShowActivity.class);
-                Log.d("neBl", Integer.toString(taskListAdapter.getCount()));
-                Log.d("neBl", "" + taskListAdapter.getItem(i).getDataBaseId());
-                //Log.d("BiLET", taskListAdapter.getItem(i).getDataBaseId().toString());
                 intent.putExtra("dataBaseId", taskListAdapter.getItem(i).getDataBaseId());
                 startActivity(intent);
             }
