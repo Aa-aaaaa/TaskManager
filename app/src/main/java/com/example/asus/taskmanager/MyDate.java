@@ -5,6 +5,9 @@ import java.util.Date;
 
 public class MyDate extends Date{
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+    private final SimpleDateFormat DBDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat DBTimeFormat = new SimpleDateFormat("HH:mm");
+    private final SimpleDateFormat DBFullFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private Date time;
     private String string;
 
@@ -56,5 +59,31 @@ public class MyDate extends Date{
 
     public void setString(String string) {
         this.stringToTime(string);
+    }
+
+    public String getStringForDB()
+    {
+        return DBDateFormat.format(time) + "T" + DBTimeFormat.format(time);
+    }
+
+    public boolean setDateFromDB(String s)
+    {
+        s.replace('T', ' ');
+        s.replace("Z", "");
+        Date t = new Date(), timeNow, timeFromString, ans = new Date(0);
+        String stringTimeNow = DBFullFormat.format(t);
+        try {
+            timeNow = DBFullFormat.parse(stringTimeNow);
+            timeFromString = DBFullFormat.parse(s);
+            if (timeNow.compareTo(timeFromString) >= 0
+                    || (!s.equals(DBFullFormat.format(timeFromString))))
+                return false;
+            this.time =  new Date(t.getTime() + timeFromString.getTime() - timeNow.getTime());
+            this.string = s;
+        }
+        catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.asus.taskmanager">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,8 +18,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".NewTaskActivity"></activity>
-        <activity android:name=".TaskShowActivity"></activity>
-        <receiver android:name="NotificationPublisher" />
+        <activity android:name=".NewTaskActivity" />
+        <activity android:name=".TaskShowActivity" />
+
+        <receiver android:name=".NotificationPublisher" />
+
+        <service
+            android:name=".FoneService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
+
 </manifest>

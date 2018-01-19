@@ -4,14 +4,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 public class TaskListAdapter extends BaseAdapter
 {
@@ -44,7 +41,7 @@ public class TaskListAdapter extends BaseAdapter
 
     @Override
     public void notifyDataSetChanged() {
-        taskList = MainActivity.getDataBase().getAllNotesFromDataBase();
+        taskList = TaskList.getInstance(null).getDataBase().getAllNotesFromDataBase();
         Collections.sort(taskList, new Comparator<Task>() {
             public int compare(Task a, Task b)
             {

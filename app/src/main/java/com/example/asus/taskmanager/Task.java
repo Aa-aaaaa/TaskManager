@@ -1,9 +1,5 @@
 package com.example.asus.taskmanager;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Task
@@ -12,6 +8,7 @@ public class Task
     private String description;
     private String name;
     private Long dataBaseId;
+    private Long globalDataBaseId;
 //    private static int amount;
 
     public Task() {
@@ -25,6 +22,7 @@ public class Task
         this.time = time;
         this.description = description;
         this.name = name;
+        this.globalDataBaseId = new Long(-1);
     }
 
     public Task(String name, MyDate time, String description, Long dataBaseId) {
@@ -32,6 +30,15 @@ public class Task
         this.description = description;
         this.name = name;
         this.dataBaseId = dataBaseId;
+        this.globalDataBaseId = new Long(-1);
+    }
+
+    public Task(String name, MyDate time, String description, Long dataBaseId, Long globalDataBaseId) {
+        this.time = time;
+        this.description = description;
+        this.name = name;
+        this.dataBaseId = dataBaseId;
+        this.globalDataBaseId = globalDataBaseId;
     }
 
     public String getDescription() {
@@ -51,6 +58,11 @@ public class Task
         return dataBaseId;
     }
 
+    public Long getGlobalDataBaseId()
+    {
+        return this.globalDataBaseId;
+    }
+
     public void setDataBaseId(Long dataBaseId)
     {
         this.dataBaseId = dataBaseId;
@@ -66,5 +78,9 @@ public class Task
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setGlobalDataBaseId(Long globalDataBaseId) {
+        this.globalDataBaseId = globalDataBaseId;
     }
 }
