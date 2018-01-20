@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/showFragment"
     android:orientation="vertical">
 
     <EditText
@@ -47,14 +48,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Delete Task" />
+            android:text="@string/delete_task" />
         <Button
             android:id="@+id/buttonSaveChanges"
             style="@style/NotCapsButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Save Changes" />
+            android:text="@string/save_task" />
 
     </LinearLayout>
 
