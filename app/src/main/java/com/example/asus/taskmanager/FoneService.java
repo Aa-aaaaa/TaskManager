@@ -1,11 +1,15 @@
 package com.example.asus.taskmanager;
 
+import android.app.Application;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -119,7 +123,7 @@ public class FoneService extends Service {
 
     public static class DoWithTask extends AsyncTask<Task, Void, JSONObject>
     {
-        Context context = null;
+        static Context context = null;
         final private static String name = "name";
         final private static String description = "description";
         final private static String date = "end_time";
@@ -176,14 +180,28 @@ public class FoneService extends Service {
                         TaskList.getInstance(context).getDataBase().updateTask(task);
                         break;
                     case ("login"):
+                        if (jObject.isNull("token"))
+                        {
+                            //TODO this toast doesn't work
+                            Toast.makeText(context.getApplicationContext(), "Wrong email or password", Toast.LENGTH_LONG);
+                            Log.d("LOGIN", "Can't sign in");
+                            return;
+                        }
                         token = jObject.getString("token");
+
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("Settings", context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("token", token);
+                        editor.commit();
+
                         MainActivity.setToken(token);
+                        context.startActivity(new Intent(context, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         break;
                     case ("registration"):
-                        boolean  isRegistered = jObject.getBoolean("status");
+                        boolean isRegistered = jObject.getBoolean("status");
                         if (isRegistered) {
                             Log.d("JSON", "Registration finished succesfully");
-                            //MainActivity.setUsername();
+                            context.startActivity(new Intent(context, LoginActivity.class));
                         }
                         else
                             Log.e("JSON", "Registration faild");
@@ -203,4 +221,3 @@ public class FoneService extends Service {
         }
     }
 }
-

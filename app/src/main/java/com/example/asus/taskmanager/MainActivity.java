@@ -1,6 +1,8 @@
 package com.example.asus.taskmanager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -18,16 +20,24 @@ public class MainActivity extends AppCompatActivity
     static private String serverName = "http://siriustaskmanager.herokuapp.com/api/";
     static private String username = "admin@admin.com";
     static private String password = "123456AB";
+    public final static String PREFERENCES_FILE_NAME = "Settings";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        final TaskList taskList = TaskList.getInstance(MainActivity.this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+        MainActivity.setToken(sharedPreferences.getString("token", null));
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class).
+        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        if (getToken() == null)
+            startActivity(intent);
+
         FoneService.getToken(username, password, MainActivity.this);
         //dataBase = new DataBase(MainActivity.this);
-        //dataBase.deleteAll();
+        //TaskList.getInstance(MainActivity.this).getDataBase().onUpgrade("");
         //TaskList.getInstance(MainActivity.this).clearDataBase();
         //TaskList.getInstance(MainActivity.this).getDataBase().addAllToGlobalDB();
         //MyDate myDate = new MyDate();
