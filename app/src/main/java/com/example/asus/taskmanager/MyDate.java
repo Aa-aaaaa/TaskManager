@@ -14,11 +14,11 @@ public class MyDate extends Date{
     private Date time;
 
     public MyDate(Date time) {
-        this.time = time;
+        this.timeToString(time);
     }
 
     public MyDate() {
-        this.time = new Date();
+        this.timeToString(new Date());
     }
 
     public MyDate(long exactTime)

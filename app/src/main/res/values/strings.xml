@@ -5,4 +5,7 @@
     <string name="make_new_note">Make New Note</string>
     <string name="date">Date</string>
     <string name="make_new_task">Make New Task</string>
+    <string name="choose_task">Choose Task</string>
+    <string name="delete_task">Delete Task</string>
+    <string name="save_task">Save Task</string>
 </resources>

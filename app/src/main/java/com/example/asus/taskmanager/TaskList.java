@@ -1,6 +1,7 @@
 package com.example.asus.taskmanager;
 
 import android.content.Context;
+import android.util.Log;
 
 public class TaskList {
     private static TaskList taskList;
@@ -19,6 +20,7 @@ public class TaskList {
     public void addTask(Task task)
     {
         this.getDataBase().addTask(task);
+        //Log.d("KEK");
         FoneService.addTask(task, thisContext);
     }
 
