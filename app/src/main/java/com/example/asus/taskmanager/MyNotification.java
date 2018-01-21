@@ -22,7 +22,7 @@ public class MyNotification
 
     public void sendNotificationOfUpcomingTask(Context context, Task task, long exactTime)
     {
-        Intent intent = new Intent(context, TaskShowActivity.class);
+        Intent intent = new Intent(context, TaskShowFragment.class);
         intent.putExtra("dataBaseId", task.getDataBaseId());
         PendingIntent pendingIntent = PendingIntent.
                 getActivity(context, (int)task.getDataBaseId(), intent,

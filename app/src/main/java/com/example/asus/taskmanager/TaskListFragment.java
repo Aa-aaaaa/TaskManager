@@ -2,8 +2,6 @@ package com.example.asus.taskmanager;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -42,8 +40,8 @@ public class TaskListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        final TaskList taskList = TaskList.getInstance();
-        TaskListAdapter taskListAdapter = new TaskListAdapter(taskList);
+        final TaskList taskList = TaskList.getInstance(getActivity());
+        TaskListAdapter taskListAdapter = new TaskListAdapter(taskList.getDataBase().getAllNotesFromDataBase());
         View view = inflater.inflate(R.layout.list_fragment, container, false);
         ((ListView)view.findViewById(R.id.taskList)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

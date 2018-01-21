@@ -1,8 +1,5 @@
 package com.example.asus.taskmanager;
 
-import android.util.Log;
-
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,11 +11,11 @@ public class MyDate extends Date{
     private Date time;
 
     public MyDate(Date time) {
-        this.timeToString(time);
+        this.time = time;
     }
 
     public MyDate() {
-        this.timeToString(new Date());
+        this.time = new Date();
     }
 
     public MyDate(long exactTime)

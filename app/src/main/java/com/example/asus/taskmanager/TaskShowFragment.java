@@ -2,20 +2,14 @@ package com.example.asus.taskmanager;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
-import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.Date;
 
 public class TaskShowFragment extends Fragment  {
 
@@ -44,7 +38,7 @@ public class TaskShowFragment extends Fragment  {
 
     private boolean checkData(int index, String name, String time, String description){
         MyDate myDate = new MyDate();
-        if (!myDate.stringToTime(time)) {
+        if (!myDate.setTime(time)) {
             Toast.makeText(getActivity(), "Bad date", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -53,9 +47,11 @@ public class TaskShowFragment extends Fragment  {
             return false;
         }
         if (index < 0)
-            TaskList.getInstance().addTask(new Task(name, myDate, description));
-        else
-            TaskList.getInstance().changeTask(index, new Task(name, myDate, description));
+            TaskList.getInstance(getActivity()).addTask(new Task(name, myDate, description));
+        else {
+            Long dBId = new Long(index);
+            TaskList.getInstance(getActivity()).changeTask(new Task(name, myDate, description, dBId, TaskList.getInstance(getActivity()).getTask(dBId).getGlobalDataBaseId()));
+        }
         return true;
     }
 
@@ -64,7 +60,7 @@ public class TaskShowFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.show_fragment, container, false);
 
-        final TaskList taskList = TaskList.getInstance();
+        final TaskList taskList = TaskList.getInstance(getActivity());
         final TextView name = (TextView)view.findViewById(R.id.name);
         final TextView time = (TextView)view.findViewById(R.id.time);
         final TextView description = (TextView)view.findViewById(R.id.description);
@@ -83,7 +79,7 @@ public class TaskShowFragment extends Fragment  {
         ((Button)view.findViewById(R.id.buttonDeleteTask)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (index >= 0)
+                if (index > 0)
                     taskList.deleteTask(index);
                 go_next();
             }

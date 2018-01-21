@@ -1,12 +1,9 @@
 package com.example.asus.taskmanager;
 
-import android.app.Application;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FoneService extends Service {
     static private String serverName = "http://siriustaskmanager.herokuapp.com/api/";
+    //static private String serverName = "https://salty-springs-72589.herokuapp.com/api/";
     private static String token = null;
     private static DataBase dataBase = null;
 
@@ -54,20 +52,39 @@ public class FoneService extends Service {
         //throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public static String getToken(String username, String password, Context context)
+    public static String getToken(String username, String password, final Context context)
     {
         if (token == null) {
             /*ArrayList<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("username", username));
             params.add(new BasicNameValuePair("password", password));
             new DoWithTask(context, params, "POST", "auth/login/", "login").execute((Task[])null);*/
+            token = MainActivity.getToken();
+            if (token != null)
+                return token;
+            Log.d(TAG, "getToken: started " + username + " " + password);
             TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
-            Call<TalkingToServerService.Token> call = talkingToServerService.serverGetToken(MainActivity.getUsername(), MainActivity.getPassword());
+            Call<TalkingToServerService.Token> call = talkingToServerService.serverGetToken(username, password);
             call.enqueue(new Callback<TalkingToServerService.Token>() {
                 @Override
                 public void onResponse(Call<TalkingToServerService.Token> call, Response<TalkingToServerService.Token> response) {
-                    if (response.isSuccessful())
+                    if (response.isSuccessful()) {
                         token = response.body().getToken();
+
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("Settings", context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("token", token);
+                        editor.commit();
+
+                        MainActivity.setToken(token);
+                        context.startActivity(new Intent(context.getApplicationContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    }
+                    else
+                    {
+                        //TODO this toast doesn't work
+                        Toast.makeText(context.getApplicationContext(), "Wrong email or password", Toast.LENGTH_LONG);
+                        Log.d("LOGIN", "Can't sign in");
+                    }
                     Log.d("Token", "getToken: " + token);
                 }
 
@@ -81,7 +98,7 @@ public class FoneService extends Service {
         return token;
     }
 
-    public static void registration(final String login, final String password, String firstName, String lastName, Context context)
+    public static void registration(final String login, final String password, String firstName, String lastName, final Context context)
     {
         /*ArrayList<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("email", login));
@@ -100,19 +117,24 @@ public class FoneService extends Service {
                     Log.d(TAG, "onResponse: " + response.toString());
                     MainActivity.setUsername(login);
                     MainActivity.setPassword(password);
+                    Log.d("JSON", "Registration finished succesfully");
+                    context.startActivity(new Intent(context, LoginActivity.class));
                 }
                 else
                 {
                     Log.e(TAG, "onResponse: Error");
                     Log.e(TAG, "onResponse: " + response.toString());
+                    Log.e("JSON", "Registration faild");
                 }
             }
 
             @Override
             public void onFailure(Call<TalkingToServerService.RegisterUser> call, Throwable t) {
                 Log.e(TAG, "onFailure: " + t.toString());
+                Log.e("JSON", "Registration faild");
             }
         });
+
     }
 
     public static void addAllTasksFromGlobalDB(Context context)
@@ -144,8 +166,8 @@ public class FoneService extends Service {
 
     public static void addTask(final Task task, final Context context)
     {
-        /*token = getToken(MainActivity.getUsername(), MainActivity.getPassword(), context);
-        ArrayList<NameValuePair> params = new ArrayList<>();
+        token = getToken(MainActivity.getUsername(), MainActivity.getPassword(), context);
+        /*ArrayList<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair(name, task.getName()));
         params.add(new BasicNameValuePair(date, task.getTime().getStringForDB()));
         Log.d("JSONFoneService", task.getTime().getStringForDB());
@@ -178,8 +200,8 @@ public class FoneService extends Service {
 
     public static void updateTask(final Task task, final Context context)
     {
-        /*token = getToken(MainActivity.getUsername(), MainActivity.getPassword(), context);
-        ArrayList<NameValuePair> params = new ArrayList<>();
+        token = getToken(MainActivity.getUsername(), MainActivity.getPassword(), context);
+        /*ArrayList<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair(name, task.getName()));
         params.add(new BasicNameValuePair(date, task.getTime().getStringForDB()));
         params.add(new BasicNameValuePair(description, task.getDescription()));
@@ -209,8 +231,8 @@ public class FoneService extends Service {
 
     public static void deleteTask(Long globalId, Context context)
     {
-        /*token = getToken(MainActivity.getUsername(), MainActivity.getPassword(), context);
-        ArrayList<NameValuePair> params = new ArrayList<>();
+        token = getToken(MainActivity.getUsername(), MainActivity.getPassword(), context);
+        /*ArrayList<NameValuePair> params = new ArrayList<>();
         new DoWithTask(context, params, "DELETE", "tasks/" + globalId + "/", "deleting").execute((Task[])null);*/
         TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
         Call<TalkingToServerService.UpdateTask> call = talkingToServerService.serverDeleteTask(globalId,"Token " + token);

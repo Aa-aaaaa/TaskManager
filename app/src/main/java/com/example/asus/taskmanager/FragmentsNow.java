@@ -1,7 +1,5 @@
 package com.example.asus.taskmanager;
 
-import android.app.Fragment;
-
 public class FragmentsNow {
     private static FragmentsNow fragmentsNow;
     private boolean list, show, empty;
@@ -64,7 +62,7 @@ public class FragmentsNow {
     public void setTSF(int index)
     {
         taskShowFragment = new TaskShowFragment();
-        taskShowFragment.setIndex(index);
+        taskShowFragment.setIndex(index + 1);
     }
 
     public boolean isCloseAll() {

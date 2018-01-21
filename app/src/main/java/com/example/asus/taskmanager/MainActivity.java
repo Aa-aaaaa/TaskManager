@@ -1,36 +1,26 @@
 package com.example.asus.taskmanager;
 
 import android.content.Context;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
 
-import java.util.Date;
-
-import static com.example.asus.taskmanager.R.*;
-import static com.example.asus.taskmanager.R.id.*;
+import static com.example.asus.taskmanager.R.id;
+import static com.example.asus.taskmanager.R.layout;
 
 public class MainActivity extends AppCompatActivity implements TaskListFragment.OnTaskListDataListener, TaskShowFragment.OnTaskShowDataListener
 {
     static private TaskListAdapter taskListAdapter;
-    //static private DataBase dataBase;
-    //static private FoneService foneService = new FoneService();
     //static private String token = "503712e87969da1ab86c6eafa9b0e6d1ac81441b";
     static private String token = null;
-    static private String username = "admin@admin.com";
-    static private String password = "123456AB";
+    //static private String username = "admin@admin.com";
+    static private String username = null;
+    //static private String password = "123456AB";
+    static private String password = null;
     public final static String PREFERENCES_FILE_NAME = "Settings";
 
     private FragmentsNow fragmentsNow = FragmentsNow.getInstance();
@@ -72,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        final TaskList taskList = TaskList.getInstance();
+        final TaskList taskList = TaskList.getInstance(MainActivity.this);
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_main);
         SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
