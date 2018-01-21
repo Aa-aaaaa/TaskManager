@@ -36,7 +36,14 @@ public class LoginActivity extends AppCompatActivity {
 
                 Log.d("EMAIL + PASSWORD", email + " " + password);
                 FoneService.getToken(email, password, LoginActivity.this);
+
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

@@ -6,12 +6,15 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -40,6 +43,25 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_main);
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.one:
+                        return true;
+                    case R.id.two:
+                        return true;
+                    case R.id.three:
+                        return true;
+                    case id.four:
+                        return true;
+                    case id.five:
+                        return true;
+                };
+                return false;
+            }
+        });
     }
 
     public void onResume()
@@ -47,8 +69,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         super.onResume();
         SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
         MainActivity.setToken(sharedPreferences.getString("token", null));
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class).
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         if (getToken() == null)
             startActivity(intent);
         else
@@ -106,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         }
         fragmentsNow.setCloseAll(false);
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override

@@ -14,18 +14,19 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleInstance">
+        </activity>
+
+        <receiver android:name=".NotificationPublisher" />
+
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".NewTaskActivity" />
-        <activity android:name=".TaskShowActivity" />
 
-        <receiver android:name=".NotificationPublisher" />
-
-        <activity android:name=".LoginActivity"/>
+        <activity android:name=".RegisterActivity"/>
 
         <receiver android:name=".NotificationPublisher" />
 
@@ -33,7 +34,6 @@
             android:name=".FoneService"
             android:enabled="true"
             android:exported="true"></service>
-        <activity android:name=".RegisterActivity" />
     </application>
 
 </manifest>
