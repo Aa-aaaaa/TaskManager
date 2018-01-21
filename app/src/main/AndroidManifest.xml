@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.asus.taskmanager">
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,20 +21,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".NewTaskActivity" />
-        <activity android:name=".TaskShowActivity" />
 
         <receiver android:name=".NotificationPublisher" />
 
-        <activity android:name=".LoginActivity"/>
+        <activity android:name=".Activities.LoginActivity" />
 
         <receiver android:name=".NotificationPublisher" />
 
         <service
             android:name=".FoneService"
             android:enabled="true"
-            android:exported="true"></service>
-        <activity android:name=".RegisterActivity" />
+            android:exported="true" />
+
+        <activity android:name=".Activities.RegisterActivity" />
+        <activity android:name=".Activities.MyProfileActivity"></activity>
     </application>
 
 </manifest>

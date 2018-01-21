@@ -1,7 +1,5 @@
 package com.example.asus.taskmanager;
 
-import android.app.Application;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +8,9 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.example.asus.taskmanager.Activities.LoginActivity;
+import com.example.asus.taskmanager.Activities.MainActivity;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -34,13 +35,6 @@ public class FoneService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        serverName = MainActivity.getServerName();
-        dataBase = TaskList.getInstance(getApplicationContext()).getDataBase();
-        if (!(token  instanceof String ))
-        {
-            token = getToken("login", "password", getApplicationContext());
-            MainActivity.setToken(token);
-        }
     }
 
     @Override
@@ -55,43 +49,35 @@ public class FoneService extends Service {
         //throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public static String getToken(String username, String password, Context context)
+    public static String getToken(User user, Context context)
     {
         // TODO: get token from server
         serverName = MainActivity.getServerName();
         if (token == null) {
             ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("username", username));
-            params.add(new BasicNameValuePair("password", password));
+            params.add(new BasicNameValuePair("username", user.getUsername()));
+            params.add(new BasicNameValuePair("password", user.getPassword()));
             new DoWithTask(context, params, "POST", "auth/login/", "login").execute((Task[])null);
         }
             //return "503712e87969da1ab86c6eafa9b0e6d1ac81441b";
         return token;
     }
 
-    public static void registration(String login, String password, String firstName, String lastName, Context context)
+    public static void registration(User user, Context context)
     {
         serverName = MainActivity.getServerName();
         ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("email", login));
-        params.add(new BasicNameValuePair("password1", password));
-        params.add(new BasicNameValuePair("password2", password));
-        params.add(new BasicNameValuePair("last_name", lastName));
-        params.add(new BasicNameValuePair("first_name", firstName));
+        params.add(new BasicNameValuePair("email", user.getUsername()));
+        params.add(new BasicNameValuePair("password1", user.getPassword()));
+        params.add(new BasicNameValuePair("password2", user.getPassword()));
+        params.add(new BasicNameValuePair("last_name", user.getPassword()));
+        params.add(new BasicNameValuePair("first_name", user.getPassword()));
         new DoWithTask(context, params, "POST", "auth/register/", "registration").execute((Task[])null);
-    }
-
-    public static void addAllTasksFromGlobalDB(Context context)
-    {
-        token = getToken(MainActivity.getUsername(), MainActivity.getPassword(), context);
-        serverName = MainActivity.getServerName();
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        new DoWithTask(context, params, "GET", "tasks/", "tadklist").execute((Task[]) null);
     }
 
     public static void addTask(Task task, Context context)
     {
-        token = getToken(MainActivity.getUsername(), MainActivity.getPassword(), context);
+        token = getToken(MainActivity.getUser(), context);
         ArrayList<NameValuePair> params = new ArrayList<>();
         serverName = MainActivity.getServerName();
         params.add(new BasicNameValuePair(name, task.getName()));
@@ -104,7 +90,7 @@ public class FoneService extends Service {
 
     public static void updateTask(Task task, Context context)
     {
-        token = getToken(MainActivity.getUsername(), MainActivity.getPassword(), context);
+        token = getToken(MainActivity.getUser(), context);
         ArrayList<NameValuePair> params = new ArrayList<>();
         serverName = MainActivity.getServerName();
         params.add(new BasicNameValuePair(name, task.getName()));
@@ -115,7 +101,7 @@ public class FoneService extends Service {
 
     public static void deleteTask(Long globalId, Context context)
     {
-        token = getToken(MainActivity.getUsername(), MainActivity.getPassword(), context);
+        token = getToken(MainActivity.getUser(), context);
         ArrayList<NameValuePair> params = new ArrayList<>();
         serverName = MainActivity.getServerName();
         new DoWithTask(context, params, "DELETE", "tasks/" + globalId + "/", "deleting").execute((Task[])null);
@@ -124,9 +110,6 @@ public class FoneService extends Service {
     public static class DoWithTask extends AsyncTask<Task, Void, JSONObject>
     {
         static Context context = null;
-        final private static String name = "name";
-        final private static String description = "description";
-        final private static String date = "end_time";
         private Long id;
         private List<NameValuePair> params = null;
         private String method = null;
@@ -182,8 +165,7 @@ public class FoneService extends Service {
                     case ("login"):
                         if (jObject.isNull("token"))
                         {
-                            //TODO this toast doesn't work
-                            Toast.makeText(context.getApplicationContext(), "Wrong email or password", Toast.LENGTH_LONG);
+                            Toast.makeText(context.getApplicationContext(), "Wrong email or password", Toast.LENGTH_LONG).show();
                             Log.d("LOGIN", "Can't sign in");
                             return;
                         }
@@ -194,7 +176,7 @@ public class FoneService extends Service {
                         editor.putString("token", token);
                         editor.commit();
 
-                        MainActivity.setToken(token);
+                        MainActivity.getUser().setToken(token);
                         context.startActivity(new Intent(context, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         break;
                     case ("registration"):

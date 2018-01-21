@@ -51,7 +51,7 @@ public class TaskShowFragment extends Fragment  {
 
     private boolean checkData(long index, String name, String time, String description) {
         MyDate myDate = new MyDate();
-        if (!myDate.setTime(time)) {
+        if (!myDate.setTime(time) || myDate.getTime() < Calendar.getInstance().getTimeInMillis()) {
             Toast.makeText(getActivity(), "Bad date", Toast.LENGTH_SHORT).show();
             return false;
         } else if (name.length() > 50 || name.length() < 1) {

@@ -1,39 +1,29 @@
-package com.example.asus.taskmanager;
+package com.example.asus.taskmanager.Activities;
 
 import android.content.Context;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
 
-import java.util.Date;
+import com.example.asus.taskmanager.FragmentsNow;
+import com.example.asus.taskmanager.TaskListFragment;
+import com.example.asus.taskmanager.TaskShowFragment;
+import com.example.asus.taskmanager.User;
 
 import static com.example.asus.taskmanager.R.*;
-import static com.example.asus.taskmanager.R.id.*;
 
 public class MainActivity extends AppCompatActivity implements TaskListFragment.OnTaskListDataListener, TaskShowFragment.OnTaskShowDataListener
 {
-    //static private DataBase dataBase;
-    //static private FoneService foneService = new FoneService();
-    //static private String token = "503712e87969da1ab86c6eafa9b0e6d1ac81441b";
-    static private String token = null;
-    static private String serverName = "http://siriustaskmanager.herokuapp.com/api/";
-    static private String username = null;
-    static private String password = null;
-    public final static String PREFERENCES_FILE_NAME = "Settings";
+    static private final String serverName = "http://salty-springs-72589.herokuapp.com/admin/core/user/";
 
-    private FragmentsNow fragmentsNow = FragmentsNow.getInstance();
+    static private User user = new User();
+    static private FragmentsNow fragmentsNow = FragmentsNow.getInstance();
+
+    static public final String PREFERENCES_FILE_NAME = "Settings";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,10 +36,10 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     {
         super.onResume();
         SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
-        MainActivity.setToken(sharedPreferences.getString("token", null));
+        user.setToken(sharedPreferences.getString("token", null));
         Intent intent = new Intent(MainActivity.this, LoginActivity.class).
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        if (getToken() == null)
+        if (user.getToken() == null)
             startActivity(intent);
         else
             startAll();
@@ -124,34 +114,6 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         fragmentsNow.setCloseAll(false);
     }
 
-    public static String getToken()
-    {
-        return token;
-    }
-    public static void setToken(String newToken)
-    {
-        token = newToken;
-    }
-
-    public static String getServerName()
-    {
-        return serverName;
-    }
-
-    public static String getUsername(){
-        return username;
-    }
-    public static void  setUsername(String newUsername){
-        username = newUsername;
-    }
-
-    public static String getPassword(){
-        return password;
-    }
-    public static void  setPassword(String newPassword){
-        password = newPassword;
-    }
-
     @Override
     public void onBackPressed() {
         if (check_land())
@@ -168,5 +130,18 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         if (fragmentsNow.isCloseAll())
             super.onBackPressed();
         fragmentsNow.setCloseAll(true);
+    }
+
+    public static String getServerName()
+    {
+        return serverName;
+    }
+
+    public static User getUser() {
+        return user;
+    }
+
+    public static void setUser(User user) {
+        MainActivity.user = user;
     }
 }
