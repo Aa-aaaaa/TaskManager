@@ -1,19 +1,32 @@
 package com.example.asus.taskmanager;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Fragment;
+import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
+
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class TaskShowFragment extends Fragment  {
 
-    private int index;
+    private long index;
 
     public TaskShowFragment() {
         index = -1;
@@ -36,22 +49,20 @@ public class TaskShowFragment extends Fragment  {
         mListener.onTaskShowDataListener();
     }
 
-    private boolean checkData(int index, String name, String time, String description){
+    private boolean checkData(long index, String name, String time, String description) {
         MyDate myDate = new MyDate();
         if (!myDate.setTime(time)) {
             Toast.makeText(getActivity(), "Bad date", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if (name.length() > 50 || name.length() < 1) {
+        } else if (name.length() > 50 || name.length() < 1) {
             Toast.makeText(getActivity(), "Bad name", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (index < 0)
             TaskList.getInstance(getActivity()).addTask(new Task(name, myDate, description));
-        else {
-            Long dBId = new Long(index);
-            TaskList.getInstance(getActivity()).changeTask(new Task(name, myDate, description, dBId, TaskList.getInstance(getActivity()).getTask(dBId).getGlobalDataBaseId()));
-        }
+        else
+            TaskList.getInstance(getActivity()).changeTask(new Task(name, myDate, description, (long)index,
+                    TaskList.getInstance(getActivity()).getDataBase().getTaskById((long)index).getGlobalDataBaseId()));
         return true;
     }
 
@@ -60,19 +71,43 @@ public class TaskShowFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.show_fragment, container, false);
 
-        final TaskList taskList = TaskList.getInstance(getActivity());
-        final TextView name = (TextView)view.findViewById(R.id.name);
-        final TextView time = (TextView)view.findViewById(R.id.time);
-        final TextView description = (TextView)view.findViewById(R.id.description);
-        if (index >= 0) {
-            name.setText(taskList.getTask(index).getName());
-            time.setText(taskList.getTask(index).getTime().getString());
-            description.setText(taskList.getTask(index).getDescription());
+        final TextView name = view.findViewById(R.id.name);
+        final TextView date = view.findViewById(R.id.tvDateTime);
+        final TextView description = view.findViewById(R.id.description);
+
+        date.setOnClickListener(new View.OnClickListener() {
+            Calendar c = Calendar.getInstance();
+            TimePickerDialog timePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minuteOfHour) {
+                    c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    c.set(Calendar.MINUTE, minuteOfHour);
+                    date.setText(new MyDate(c.getTimeInMillis()).toString());
+                }
+            }, Calendar.getInstance().get(Calendar.HOUR), Calendar.getInstance().get(Calendar.HOUR), true);
+            public void onClick(View v) {
+                DatePickerDialog datePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year1, int month1, int dayOfMonth) {
+                        c.set(Calendar.YEAR, year1);
+                        c.set(Calendar.MONTH, month1);
+                        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        timePicker.show();
+                    }
+                }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                datePicker.show();
+            }
+        });
+
+        if (index > 0) {
+            name.setText(TaskList.getInstance(getActivity()).getTask(index).getName());
+            date.setText(TaskList.getInstance(getActivity()).getTask(index).getTime().getString());
+            description.setText(TaskList.getInstance(getActivity()).getTask(index).getDescription());
         }
         else
         {
             name.setText("");
-            time.setText((new MyDate()).getString());
+            date.setText((new MyDate()).getString());
             description.setText("");
         }
 
@@ -80,7 +115,7 @@ public class TaskShowFragment extends Fragment  {
             @Override
             public void onClick(View view) {
                 if (index > 0)
-                    taskList.deleteTask(index);
+                    TaskList.getInstance(getActivity()).deleteTask(index);
                 go_next();
             }
         });
@@ -88,7 +123,7 @@ public class TaskShowFragment extends Fragment  {
         ((Button)view.findViewById(R.id.buttonSaveChanges)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkData(index, name.getText().toString(), time.getText().toString(), description.getText().toString()))
+                if (checkData(index, name.getText().toString(), date.getText().toString(), description.getText().toString()))
                     go_next();
             }
         });

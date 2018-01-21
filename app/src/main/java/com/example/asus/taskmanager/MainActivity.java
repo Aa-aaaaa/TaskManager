@@ -25,6 +25,26 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
 
     private FragmentsNow fragmentsNow = FragmentsNow.getInstance();
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(layout.activity_main);
+    }
+
+    public void onResume()
+    {
+        super.onResume();
+        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+        MainActivity.setToken(sharedPreferences.getString("token", null));
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class).
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        if (getToken() == null)
+            startActivity(intent);
+        else
+            startAll();
+    }
+
     private boolean check_land()
     {
         return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
@@ -62,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        final TaskList taskList = TaskList.getInstance(MainActivity.this);
+        final TaskList taskList = TaskList.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_main);
         SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
@@ -81,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         //myDate.stringToTime("28.02.2019 12:00");
         //TaskList.getInstance(MainActivity.this).addTask(new Task("Check loging",  myDate, "It will be doing until it works"));
         //token = FoneService.getToken("admin@admin.com", "123456AB", MainActivity.this);
-        //FoneService.registration("megamax143@gmail.com", "123456Aa", "Maksim", "Nyashin", MainActivity.this);
+        //FoneService.registration("megamax143.13@gmail.com", "123456Aa", "Maksim", "Nyashin", MainActivity.this);
         taskListAdapter = new TaskListAdapter(TaskList.getInstance(MainActivity.this).getDataBase().getAllNotesFromDataBase());
 
         startAll();
@@ -92,14 +112,14 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         if (check_land())
         {
             fragmentsNow.set(true, true, false);
-            fragmentsNow.setTSF(bundle.getInt("index"));
+            fragmentsNow.setTSF(bundle.getLong("index"));
             getFragmentManager().beginTransaction().replace(id.list, fragmentsNow.getTLF()).commit();
             getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTSF()).commit();
         }
         else
         {
             fragmentsNow.set(false, true, false);
-            fragmentsNow.setTSF(bundle.getInt("index"));
+            fragmentsNow.setTSF(bundle.getLong("index"));
             getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTSF()).commit();
         }
         fragmentsNow.setCloseAll(false);
@@ -108,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onTaskShowDataListener() {
-        taskListAdapter.notifyDataSetChanged();
         if (check_land())
         {
             fragmentsNow.set(true, false, true);
@@ -121,10 +140,6 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
             getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTLF()).commit();
         }
         fragmentsNow.setCloseAll(false);
-    }
-
-    public static TaskListAdapter getTaskListAdapter() {
-        return taskListAdapter;
     }
 
     public static String getToken()

@@ -31,22 +31,22 @@ public class TaskListFragment extends Fragment {
         return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
-    private void go_next(int index) {
+    private void go_next(long index) {
         Bundle bundle = new Bundle();
-        bundle.putInt("index", index);
+        bundle.putLong("index", index);
         mListener.onTaskListDataListener(bundle);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        final TaskList taskList = TaskList.getInstance(getActivity());
-        TaskListAdapter taskListAdapter = new TaskListAdapter(taskList.getDataBase().getAllNotesFromDataBase());
+        final TaskListAdapter taskListAdapter = new TaskListAdapter(TaskList.
+                getInstance(getActivity()).getDataBase().getAllNotesFromDataBase());
         View view = inflater.inflate(R.layout.list_fragment, container, false);
         ((ListView)view.findViewById(R.id.taskList)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                go_next(i);
+                go_next(taskListAdapter.getItem(i).getDataBaseId());
             }
         });
         ((ListView)view.findViewById(R.id.taskList)).setAdapter(taskListAdapter);
