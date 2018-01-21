@@ -15,7 +15,6 @@ public class MainActivity extends AppCompatActivity
     //static private FoneService foneService = new FoneService();
     //static private String token = "503712e87969da1ab86c6eafa9b0e6d1ac81441b";
     static private String token = null;
-    static private String serverName = "http://siriustaskmanager.herokuapp.com/api/";
     static private String username = "admin@admin.com";
     static private String password = "123456AB";
 
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity
         //myDate.stringToTime("28.02.2019 12:00");
         //TaskList.getInstance(MainActivity.this).addTask(new Task("Check loging",  myDate, "It will be doing until it works"));
         //token = FoneService.getToken("admin@admin.com", "123456AB", MainActivity.this);
-        //FoneService.registration("megamax143.13@gmail.com", "123456Aa", "Maksim", "Nyashin", MainActivity.this);
+        //FoneService.registration("megamax143@gmail.com", "123456Aa", "Maksim", "Nyashin", MainActivity.this);
         taskListAdapter = new TaskListAdapter(TaskList.getInstance(MainActivity.this).getDataBase().getAllNotesFromDataBase());
 
         ((ListView)findViewById(R.id.taskList)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -77,11 +76,6 @@ public class MainActivity extends AppCompatActivity
     public static void setToken(String newToken)
     {
         token = newToken;
-    }
-
-    public static String getServerName()
-    {
-        return serverName;
     }
 
     public static String getUsername(){
