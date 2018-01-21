@@ -61,10 +61,10 @@ public class FragmentsNow {
         return emptyFragment;
     }
 
-    public void setTSF(int index)
+    public void setTSF(long dataBaseId)
     {
         taskShowFragment = new TaskShowFragment();
-        taskShowFragment.setIndex(index);
+        taskShowFragment.setIndex(dataBaseId);
     }
 
     public boolean isCloseAll() {

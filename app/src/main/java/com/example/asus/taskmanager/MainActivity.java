@@ -24,17 +24,36 @@ import static com.example.asus.taskmanager.R.id.*;
 
 public class MainActivity extends AppCompatActivity implements TaskListFragment.OnTaskListDataListener, TaskShowFragment.OnTaskShowDataListener
 {
-    static private TaskListAdapter taskListAdapter;
     //static private DataBase dataBase;
     //static private FoneService foneService = new FoneService();
     //static private String token = "503712e87969da1ab86c6eafa9b0e6d1ac81441b";
     static private String token = null;
     static private String serverName = "http://siriustaskmanager.herokuapp.com/api/";
-    static private String username = "admin@admin.com";
-    static private String password = "123456AB";
+    static private String username = null;
+    static private String password = null;
     public final static String PREFERENCES_FILE_NAME = "Settings";
 
     private FragmentsNow fragmentsNow = FragmentsNow.getInstance();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(layout.activity_main);
+    }
+
+    public void onResume()
+    {
+        super.onResume();
+        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+        MainActivity.setToken(sharedPreferences.getString("token", null));
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class).
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        if (getToken() == null)
+            startActivity(intent);
+        else
+            startAll();
+    }
 
     private boolean check_land()
     {
@@ -71,46 +90,18 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        final TaskList taskList = TaskList.getInstance();
-        super.onCreate(savedInstanceState);
-        setContentView(layout.activity_main);
-        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
-        MainActivity.setToken(sharedPreferences.getString("token", null));
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class).
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        if (getToken() == null)
-            startActivity(intent);
-
-        FoneService.getToken(username, password, MainActivity.this);
-        //dataBase = new DataBase(MainActivity.this);
-        //TaskList.getInstance(MainActivity.this).getDataBase().onUpgrade("");
-        //TaskList.getInstance(MainActivity.this).clearDataBase();
-        //TaskList.getInstance(MainActivity.this).getDataBase().addAllToGlobalDB();
-        //MyDate myDate = new MyDate();
-        //myDate.stringToTime("28.02.2019 12:00");
-        //TaskList.getInstance(MainActivity.this).addTask(new Task("Check loging",  myDate, "It will be doing until it works"));
-        //token = FoneService.getToken("admin@admin.com", "123456AB", MainActivity.this);
-        //FoneService.registration("megamax143.13@gmail.com", "123456Aa", "Maksim", "Nyashin", MainActivity.this);
-        taskListAdapter = new TaskListAdapter(TaskList.getInstance(MainActivity.this).getDataBase().getAllNotesFromDataBase());
-
-        startAll();
-    }
-
-    @Override
     public void onTaskListDataListener(Bundle bundle) {
         if (check_land())
         {
             fragmentsNow.set(true, true, false);
-            fragmentsNow.setTSF(bundle.getInt("index"));
+            fragmentsNow.setTSF(bundle.getLong("index"));
             getFragmentManager().beginTransaction().replace(id.list, fragmentsNow.getTLF()).commit();
             getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTSF()).commit();
         }
         else
         {
             fragmentsNow.set(false, true, false);
-            fragmentsNow.setTSF(bundle.getInt("index"));
+            fragmentsNow.setTSF(bundle.getLong("index"));
             getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTSF()).commit();
         }
         fragmentsNow.setCloseAll(false);
@@ -119,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onTaskShowDataListener() {
-        taskListAdapter.notifyDataSetChanged();
         if (check_land())
         {
             fragmentsNow.set(true, false, true);
@@ -132,10 +122,6 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
             getFragmentManager().beginTransaction().replace(id.other, fragmentsNow.getTLF()).commit();
         }
         fragmentsNow.setCloseAll(false);
-    }
-
-    public static TaskListAdapter getTaskListAdapter() {
-        return taskListAdapter;
     }
 
     public static String getToken()

@@ -13,12 +13,9 @@ public class MyDate extends Date{
     private final SimpleDateFormat DBFullFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private Date time;
 
-    public MyDate(Date time) {
-        this.timeToString(time);
-    }
-
-    public MyDate() {
-        this.timeToString(new Date());
+    public MyDate()
+    {
+        time = new Date();
     }
 
     public MyDate(long exactTime)
@@ -47,6 +44,11 @@ public class MyDate extends Date{
         }
         return true;
     }
+
+    public void setTime(Date time) {
+        this.setTime(time.getTime());
+    }
+
     @Override
     public long getTime()
     {
@@ -57,9 +59,6 @@ public class MyDate extends Date{
         return time;
     }
 
-    public void setTime(Date time) {
-        this.setTime(time.getTime());
-    }
 
     public String getString() {
         return simpleDateFormat.format(time);
