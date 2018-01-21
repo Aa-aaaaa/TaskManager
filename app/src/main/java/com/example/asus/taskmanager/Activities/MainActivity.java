@@ -4,10 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListView;
 
 import com.example.asus.taskmanager.FragmentsNow;
 import com.example.asus.taskmanager.TaskListFragment;
@@ -30,6 +39,25 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_main);
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.one:
+                        return true;
+                    case R.id.two:
+                        return true;
+                    case R.id.three:
+                        return true;
+                    case id.four:
+                        return true;
+                    case id.five:
+                        return true;
+                };
+                return false;
+            }
+        });
     }
 
     public void onResume()
@@ -96,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         }
         fragmentsNow.setCloseAll(false);
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
