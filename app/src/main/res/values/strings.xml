@@ -13,4 +13,6 @@
     <string name="three">three</string>
     <string name="four">four</string>
     <string name="five">five</string>
+    <string name="iWantNewTask">Make new Task!</string>
+    <string name="iHaveTask">Tasks!</string>
 </resources>

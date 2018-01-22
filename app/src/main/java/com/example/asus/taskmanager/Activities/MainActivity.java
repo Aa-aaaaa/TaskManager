@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
                     case id.four:
                         return true;
                     case id.five:
+                        fragmentsNow.setNumber_of_fragment_block(5);
+                        startAll();
                         return true;
                 };
                 return false;
@@ -59,14 +61,17 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     }
 
     void startAll() {
-        user.setInfoFromSP(MainActivity.this);
+ /*       user.setInfoFromSP(MainActivity.this);
         if (user.getToken() == null)
         {
             startActivity(new Intent(MainActivity.this, LoginActivity.class).
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             finish();
         }
-        switch (fragmentsNow.getNumber_of_fragment_block()) {
+   */     switch (fragmentsNow.getNumber_of_fragment_block()) {
+            case 5:
+                fragmentsNow.setMyTasks(false, true, false);
+                fragmentsNow.setNumber_of_fragment_block(1);
             case 1:
                 startMyTasks();
                 bottomNavigationView.setSelectedItemId(id.one);
@@ -74,6 +79,12 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
             case 2:
                 startMyProfile();
                 bottomNavigationView.setSelectedItemId(id.two);
+                return;
+            case 3:
+                bottomNavigationView.setSelectedItemId(id.three);
+                return;
+            case 4:
+                bottomNavigationView.setSelectedItemId(id.four);
                 return;
         }
     }
@@ -85,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
 
     private void startMyTasks()
     {
+        fragmentsNow.setNumber_of_fragment_block(1);
         if (getFragmentManager().findFragmentById(id.all_screen) != null)
             getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.all_screen)).commit();
         if (fragmentsNow.getTSF() == null) {
@@ -115,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
 
     private void startMyProfile()
     {
+        fragmentsNow.setNumber_of_fragment_block(2);
         if (getFragmentManager().findFragmentById(id.other) != null)
             getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.other)).commit();
         if (check_land() && getFragmentManager().findFragmentById(id.list) != null)
@@ -128,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     public void onTaskListDataListener(Bundle bundle) {
         fragmentsNow.setMyTasks(false, true, false);
         fragmentsNow.setTSF(bundle.getLong("index"));
-        startMyTasks();
+        startAll();
         fragmentsNow.setCloseAll(false);
     }
 
@@ -136,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     @Override
     public void onTaskShowDataListener() {
         fragmentsNow.setMyTasks(true, false, true);
-        startMyTasks();
+        startAll();
         fragmentsNow.setCloseAll(false);
     }
 

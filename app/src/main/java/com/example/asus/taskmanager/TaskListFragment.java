@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class TaskListFragment extends Fragment {
 
@@ -45,6 +46,11 @@ public class TaskListFragment extends Fragment {
         final TaskListAdapter taskListAdapter = new TaskListAdapter(TaskList.
                 getInstance(getActivity()).getDataBase().getAllNotesFromDataBase());
         View view = inflater.inflate(R.layout.list_fragment, container, false);
+        TextView textView = view.findViewById(R.id.taskHead);
+        if (TaskList.getInstance(getActivity()).getDataBase().getAllNotesFromDataBase().size() == 0)
+            textView.setText(R.string.iWantNewTask);
+        else
+            textView.setText(R.string.iHaveTask);
         ((ListView)view.findViewById(R.id.taskList)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -53,18 +59,11 @@ public class TaskListFragment extends Fragment {
         });
         ((ListView)view.findViewById(R.id.taskList)).setAdapter(taskListAdapter);
 
-        ((Button)view.findViewById(R.id.buttonGoMakeNewTask)).setOnClickListener(new View.OnClickListener() {
-                                       @Override
-                                       public void onClick(View view) {
-                                           go_next(-1);
-                                       }
-                                   });
         return view;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setRetainInstance(true);
     }
 }

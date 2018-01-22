@@ -102,4 +102,8 @@ public class FragmentsNow {
     public void setCloseAll(boolean closeAll) {
         this.closeAll = closeAll;
     }
+
+    public void setNumber_of_fragment_block(int number_of_fragment_block) {
+        this.number_of_fragment_block = number_of_fragment_block;
+    }
 }
