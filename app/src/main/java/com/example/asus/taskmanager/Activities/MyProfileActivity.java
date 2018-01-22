@@ -28,6 +28,7 @@ public class MyProfileActivity extends AppCompatActivity {
                     case R.id.one:
                         startActivity(new Intent(MyProfileActivity.this, MainActivity.class).
                                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        overridePendingTransition(0, 0);
                         finish();
                         return true;
                     case R.id.two:
@@ -35,16 +36,19 @@ public class MyProfileActivity extends AppCompatActivity {
                     case R.id.three:
                         startActivity(new Intent(MyProfileActivity.this, MainActivity.class).
                                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        overridePendingTransition(0, 0);
                         finish();
                         return true;
                     case R.id.four:
                         startActivity(new Intent(MyProfileActivity.this, MainActivity.class).
                                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        overridePendingTransition(0, 0);
                         finish();
                         return true;
                     case R.id.five:
                         startActivity(new Intent(MyProfileActivity.this, MainActivity.class).
                                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        overridePendingTransition(0, 0);
                         finish();
                         return true;
                 };

@@ -4,19 +4,24 @@ import android.app.Fragment;
 
 public class FragmentsNow {
     private static FragmentsNow fragmentsNow;
-    private boolean list, show, empty;
+    private boolean list, show, empty, profile;
     private TaskListFragment taskListFragment;
     private TaskShowFragment taskShowFragment;
     private EmptyFragment emptyFragment;
+    private MyProfileFragment myProfileFragment;
     private boolean closeAll;
+    private int number_of_fragment_block;
 
     private FragmentsNow() {
         taskListFragment = null;
         taskShowFragment = null;
         emptyFragment = null;
+        myProfileFragment = null;
         list = false;
         show = false;
         empty = false;
+        profile = false;
+        number_of_fragment_block = 1;
         closeAll = false;
     }
 
@@ -26,9 +31,8 @@ public class FragmentsNow {
         return fragmentsNow;
     }
 
-    public void set(boolean list, boolean show, boolean empty)
+    public void setMyTasks(boolean list, boolean show, boolean empty)
     {
-        //для отображения изменений
         if (list)
             this.taskListFragment = new TaskListFragment();
         else
@@ -44,6 +48,21 @@ public class FragmentsNow {
         this.list = list;
         this.show = show;
         this.empty = empty;
+        this.profile = false;
+        this.myProfileFragment = null;
+        this.number_of_fragment_block = 1;
+    }
+
+    public void setMyProfile() {
+        this.list = false;
+        this.taskListFragment = null;
+        this.show = false;
+        this.taskShowFragment = null;
+        this.empty = false;
+        this.emptyFragment = null;
+        this.profile = true;
+        this.myProfileFragment = new MyProfileFragment();
+        this.number_of_fragment_block = 2;
     }
 
     public TaskShowFragment getTSF()
@@ -61,10 +80,19 @@ public class FragmentsNow {
         return emptyFragment;
     }
 
+    public MyProfileFragment getMPF() {
+        return myProfileFragment;
+    }
+
     public void setTSF(long dataBaseId)
     {
         taskShowFragment = new TaskShowFragment();
         taskShowFragment.setIndex(dataBaseId);
+    }
+
+    public int getNumber_of_fragment_block()
+    {
+        return this.number_of_fragment_block;
     }
 
     public boolean isCloseAll() {
