@@ -1,5 +1,6 @@
 package com.example.asus.taskmanager;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -171,19 +172,17 @@ public class FoneService extends Service {
                         }
                         token = jObject.getString("token");
 
-                        SharedPreferences sharedPreferences = context.getSharedPreferences("Settings", context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("token", token);
-                        editor.commit();
+                        MainActivity.getUser().succesfullLogin(context, token);
 
-                        MainActivity.getUser().setToken(token);
                         context.startActivity(new Intent(context, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        ((Activity)context).finish();
                         break;
                     case ("registration"):
                         boolean isRegistered = jObject.getBoolean("status");
                         if (isRegistered) {
                             Log.d("JSON", "Registration finished succesfully");
-                            context.startActivity(new Intent(context, LoginActivity.class));
+                            context.startActivity(new Intent(context, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                            ((Activity)context).finish();
                         }
                         else
                             Log.e("JSON", "Registration faild");

@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.asus.taskmanager.FragmentsNow;
+import com.example.asus.taskmanager.R;
 import com.example.asus.taskmanager.TaskListFragment;
 import com.example.asus.taskmanager.TaskShowFragment;
 import com.example.asus.taskmanager.User;
@@ -27,7 +28,7 @@ import static com.example.asus.taskmanager.R.*;
 
 public class MainActivity extends AppCompatActivity implements TaskListFragment.OnTaskListDataListener, TaskShowFragment.OnTaskShowDataListener
 {
-    static private final String serverName = "http://salty-springs-72589.herokuapp.com/admin/core/user/";
+    static private final String serverName = "http://salty-springs-72589.herokuapp.com/api/";
 
     static private User user = new User();
     static private FragmentsNow fragmentsNow = FragmentsNow.getInstance();
@@ -47,12 +48,24 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
                     case R.id.one:
                         return true;
                     case R.id.two:
+                        startActivity(new Intent(MainActivity.this, MyProfileActivity.class).
+                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        finish();
                         return true;
                     case R.id.three:
+                        startActivity(new Intent(MainActivity.this, MyProfileActivity.class).
+                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        finish();
                         return true;
                     case id.four:
+                        startActivity(new Intent(MainActivity.this, MyProfileActivity.class).
+                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        finish();
                         return true;
                     case id.five:
+                        startActivity(new Intent(MainActivity.this, MyProfileActivity.class).
+                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        finish();
                         return true;
                 };
                 return false;
@@ -60,17 +73,16 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         });
     }
 
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
-        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
-        user.setToken(sharedPreferences.getString("token", null));
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class).
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        user.setInfoFromSP(MainActivity.this);
         if (user.getToken() == null)
-            startActivity(intent);
-        else
-            startAll();
+        {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class).
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            finish();
+        }
+        startAll();
     }
 
     private boolean check_land()
