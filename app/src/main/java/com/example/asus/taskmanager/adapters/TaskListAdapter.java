@@ -1,10 +1,14 @@
-package com.example.asus.taskmanager;
+package com.example.asus.taskmanager.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.example.asus.taskmanager.R;
+import com.example.asus.taskmanager.Task;
+import com.example.asus.taskmanager.TaskList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +17,7 @@ import java.util.Comparator;
 public class TaskListAdapter extends BaseAdapter
 {
     ArrayList <Task> taskList;
-    TaskListAdapter(ArrayList<Task> taskList)
+    public TaskListAdapter(ArrayList<Task> taskList)
     {
         this.taskList = taskList;
         Collections.sort(this.taskList, new Comparator<Task>() {

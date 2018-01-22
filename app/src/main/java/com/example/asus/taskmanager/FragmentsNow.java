@@ -1,6 +1,8 @@
 package com.example.asus.taskmanager;
 
-import android.app.Fragment;
+import com.example.asus.taskmanager.fragments.EmptyFragment;
+import com.example.asus.taskmanager.fragments.TaskListFragment;
+import com.example.asus.taskmanager.fragments.TaskShowFragment;
 
 public class FragmentsNow {
     private static FragmentsNow fragmentsNow;

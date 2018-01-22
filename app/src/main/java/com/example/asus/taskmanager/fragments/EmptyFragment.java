@@ -1,4 +1,4 @@
-package com.example.asus.taskmanager;
+package com.example.asus.taskmanager.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.asus.taskmanager.R;
+
 public class EmptyFragment extends Fragment {
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 

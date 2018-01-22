@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/listFragment"
-    tools:context="com.example.asus.taskmanager.Activities.MainActivity">
+    tools:context="com.example.asus.taskmanager.activities.MainActivity">
 
     <Button
         android:id="@+id/buttonGoMakeNewTask"

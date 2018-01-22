@@ -3,7 +3,7 @@ package com.example.asus.taskmanager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.asus.taskmanager.Activities.MainActivity;
+import com.example.asus.taskmanager.activities.MainActivity;
 
 public class User {
     private String username;

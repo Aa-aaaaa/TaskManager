@@ -1,27 +1,19 @@
-package com.example.asus.taskmanager.Activities;
+package com.example.asus.taskmanager.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
 
 import com.example.asus.taskmanager.FragmentsNow;
 import com.example.asus.taskmanager.R;
-import com.example.asus.taskmanager.TaskListFragment;
-import com.example.asus.taskmanager.TaskShowFragment;
+import com.example.asus.taskmanager.fragments.TaskListFragment;
+import com.example.asus.taskmanager.fragments.TaskShowFragment;
 import com.example.asus.taskmanager.User;
 
 import static com.example.asus.taskmanager.R.*;

@@ -1,4 +1,4 @@
-package com.example.asus.taskmanager.Activities;
+package com.example.asus.taskmanager.activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.asus.taskmanager.R;
-import com.example.asus.taskmanager.User;
 
 public class MyProfileActivity extends AppCompatActivity {
 

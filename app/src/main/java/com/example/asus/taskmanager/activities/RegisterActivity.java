@@ -1,4 +1,4 @@
-package com.example.asus.taskmanager.Activities;
+package com.example.asus.taskmanager.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.asus.taskmanager.Activities.LoginActivity;
-import com.example.asus.taskmanager.Activities.MainActivity;
+import com.example.asus.taskmanager.activities.LoginActivity;
+import com.example.asus.taskmanager.activities.MainActivity;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -71,8 +70,8 @@ public class FoneService extends Service {
         params.add(new BasicNameValuePair("email", user.getUsername()));
         params.add(new BasicNameValuePair("password1", user.getPassword()));
         params.add(new BasicNameValuePair("password2", user.getPassword()));
-        params.add(new BasicNameValuePair("last_name", user.getPassword()));
-        params.add(new BasicNameValuePair("first_name", user.getPassword()));
+        params.add(new BasicNameValuePair("first_name", user.getName()));
+        params.add(new BasicNameValuePair("last_name", user.getLastName()));
         new DoWithTask(context, params, "POST", "auth/register/", "registration").execute((Task[])null);
     }
 
