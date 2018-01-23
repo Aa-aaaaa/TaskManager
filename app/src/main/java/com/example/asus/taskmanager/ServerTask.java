@@ -7,8 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Maxim on 21.01.2018.
  */
 
-public class ServerTask {
-
+public class ServerTask{
     @SerializedName("id")
     @Expose
     private Long id;

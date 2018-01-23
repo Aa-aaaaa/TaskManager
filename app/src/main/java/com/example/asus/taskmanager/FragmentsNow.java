@@ -6,15 +6,16 @@ import com.example.asus.taskmanager.fragments.MyProfileFragment;
 import com.example.asus.taskmanager.fragments.EmptyFragment;
 import com.example.asus.taskmanager.fragments.TaskListFragment;
 import com.example.asus.taskmanager.fragments.TaskShowFragment;
+import com.example.asus.taskmanager.fragments.UserListFragment;
 
 public class FragmentsNow {
     private static FragmentsNow fragmentsNow;
-    private boolean list, show, empty, profile, feed;
     private TaskListFragment taskListFragment;
     private TaskShowFragment taskShowFragment;
     private EmptyFragment emptyFragment;
     private MyProfileFragment myProfileFragment;
     private FeedFragment feedFragment;
+    private UserListFragment friendsFragment;
     private boolean closeAll;
     private int number_of_fragment_block;
 
@@ -24,11 +25,7 @@ public class FragmentsNow {
         emptyFragment = null;
         myProfileFragment = null;
         feedFragment = null;
-        list = false;
-        show = false;
-        empty = false;
-        profile = false;
-        feed = false;
+        friendsFragment = null;
         number_of_fragment_block = 1;
         closeAll = false;
     }
@@ -53,45 +50,45 @@ public class FragmentsNow {
             this.emptyFragment = (this.emptyFragment == null) ? new EmptyFragment() : this.emptyFragment;
         else
             this.emptyFragment = null;
-        this.list = list;
-        this.show = show;
-        this.empty = empty;
-        this.feed = false;
-        this.profile = false;
         this.feedFragment = null;
         this.myProfileFragment = null;
+        this.friendsFragment = null;
         this.number_of_fragment_block = 1;
     }
 
-    public void setMyProfile() {
-        this.list = false;
+    public void setMyProfile(boolean friends, boolean profile) {
         this.taskListFragment = null;
-        this.show = false;
         this.taskShowFragment = null;
-        this.empty = false;
         this.emptyFragment = null;
-        this.feed = false;
         this.feedFragment = null;
-        this.profile = true;
-        this.myProfileFragment = new MyProfileFragment();
+        if (friends)
+            this.friendsFragment = (this.friendsFragment == null) ? new UserListFragment() : this.friendsFragment;
+        else
+            this.friendsFragment = null;
+        if (profile)
+            this.myProfileFragment = new MyProfileFragment();
+        else
+            this.myProfileFragment = null;
         this.number_of_fragment_block = 2;
     }
 
     public void setFeed() {
-        this.list = false;
         this.taskListFragment = null;
-        this.show = false;
         this.taskShowFragment = null;
-        this.empty = false;
         this.emptyFragment = null;
-        this.profile = false;
         this.myProfileFragment = null;
-        this.feed = true;
+        this.friendsFragment = null;
         this.feedFragment = new FeedFragment();
         this.number_of_fragment_block = 3;
     }
 
     public void setFind() {
+        this.taskListFragment = null;
+        this.taskShowFragment = null;
+        this.emptyFragment = null;
+        this.myProfileFragment = null;
+        this.friendsFragment = null;
+        this.feedFragment = null;
 
         this.number_of_fragment_block = 4;
     }
@@ -123,10 +120,18 @@ public class FragmentsNow {
         return feedFragment;
     }
 
+    public UserListFragment getMFF() {
+        return friendsFragment;
+    }
+
     public void setTSF(long dataBaseId)
     {
         taskShowFragment = new TaskShowFragment();
         taskShowFragment.setIndex(dataBaseId);
+    }
+
+    public void setMFF(String s) {
+        friendsFragment = UserListFragment.newInstance(s);
     }
 
     public int getNumber_of_fragment_block()

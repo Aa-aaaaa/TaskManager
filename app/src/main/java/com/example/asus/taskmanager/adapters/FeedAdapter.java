@@ -17,34 +17,37 @@ import java.util.List;
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder>
 {
     private Context context;
-    private List<ServerTask> userList;
+    private List<ServerTask> feedList;
 
     public FeedAdapter (Context context, List<ServerTask> serverTaskList)
     {
         this.context = context;
-        this.userList = userList;
+        this.feedList = serverTaskList;
     }
 
     @Override
     public FeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.user_list_layout, null);
+        View view = inflater.inflate(R.layout.feed_list_layout, null);
         return new FeedViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(FeedViewHolder holder, int position) {
-        ServerTask serverTask = userList.get(position);
+        ServerTask serverTask = feedList.get(position);
+
         holder.tvTaskName.setText(serverTask.getName());
+        holder.tvOwnerName.setText(serverTask.getDescription());
+/*        holder.tvTaskName.setText(serverTask.getName());
         User user = new User();
         FoneService.getUser(serverTask.getOwner(), context, user);
         //TODO: do it with callback
-        holder.tvOwnerName.setText(user.getFirstName() + " " + user.getLastName());
+        holder.tvOwnerName.setText(user.getFirstName() + " " + user.getLastName());*/
     }
 
     @Override
     public int getItemCount() {
-        return userList.size();
+        return feedList.size();
     }
 
     class FeedViewHolder extends RecyclerView.ViewHolder
