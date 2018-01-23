@@ -5,9 +5,7 @@ import java.util.Date;
 
 public class MyDate extends Date{
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-    private final SimpleDateFormat DBDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private final SimpleDateFormat DBTimeFormat = new SimpleDateFormat("HH:mm");
-    private final SimpleDateFormat DBFullFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private final SimpleDateFormat DBFullFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     private Date time;
 
     public MyDate()
@@ -71,14 +69,12 @@ public class MyDate extends Date{
 
     public String getStringForDB()
     {
-        return DBDateFormat.format(time) + "T" + DBTimeFormat.format(time);
+        return DBFullFormat.format(this.time);
     }
 
-    public boolean setDateFromDB(String s)
+    public boolean setTimeFromDB(String s)
     {
-        s.replace('T', ' ');
-        s.replace("Z", "");
-        Date t = new Date(), timeNow, timeFromString, ans = new Date(0);
+        /*Date t = new Date(), timeNow, timeFromString, ans = new Date(0);
         String stringTimeNow = DBFullFormat.format(t);
         try {
             timeNow = DBFullFormat.parse(stringTimeNow);
@@ -87,6 +83,14 @@ public class MyDate extends Date{
                     || (!s.equals(DBFullFormat.format(timeFromString))))
                 return false;
             this.time =  new Date(t.getTime() + timeFromString.getTime() - timeNow.getTime());
+        }
+        catch (Exception e) {
+            return false;
+        }
+        return true;*/
+        try {
+            Date timeFromString = new Date(DBFullFormat.parse(s).getTime());
+            time = new Date(timeFromString.getTime());
         }
         catch (Exception e) {
             return false;

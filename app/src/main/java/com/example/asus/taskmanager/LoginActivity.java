@@ -33,7 +33,8 @@ public class LoginActivity extends AppCompatActivity {
                 String password = ((EditText)findViewById(R.id.etPassword)).getText().toString();
 
                 Log.d("EMAIL + PASSWORD", email + " " + password);
-                FoneService.getToken(email, password, LoginActivity.this);
+                MainActivity.getUser().setUser(new User(email, password));
+                FoneService.getToken(MainActivity.getUser(), LoginActivity.this);
             }
         });
     }

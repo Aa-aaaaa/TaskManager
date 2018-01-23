@@ -14,23 +14,18 @@ import static com.example.asus.taskmanager.R.layout;
 
 public class MainActivity extends AppCompatActivity implements TaskListFragment.OnTaskListDataListener, TaskShowFragment.OnTaskShowDataListener
 {
+    static private User user = new User();
     static private TaskListAdapter taskListAdapter;
-    //static private String token = "503712e87969da1ab86c6eafa9b0e6d1ac81441b";
-    static private String token = null;
-    //static private String username = "admin@admin.com";
-    static private String username = null;
-    //static private String password = "123456AB";
-    static private String password = null;
     public final static String PREFERENCES_FILE_NAME = "Settings";
 
     private FragmentsNow fragmentsNow = FragmentsNow.getInstance();
 
-    @Override
+    /*@Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_main);
-    }
+    }*/
 
     public void onResume()
     {
@@ -82,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        final TaskList taskList = TaskList.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_main);
         SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
@@ -92,16 +86,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         if (getToken() == null)
             startActivity(intent);
 
-        FoneService.getToken(username, password, MainActivity.this);
-        //dataBase = new DataBase(MainActivity.this);
-        //TaskList.getInstance(MainActivity.this).getDataBase().onUpgrade("");
-        //TaskList.getInstance(MainActivity.this).clearDataBase();
-        //TaskList.getInstance(MainActivity.this).getDataBase().addAllToGlobalDB();
-        //MyDate myDate = new MyDate();
-        //myDate.stringToTime("28.02.2019 12:00");
-        //TaskList.getInstance(MainActivity.this).addTask(new Task("Check loging",  myDate, "It will be doing until it works"));
-        //token = FoneService.getToken("admin@admin.com", "123456AB", MainActivity.this);
-        //FoneService.registration("megamax143.13@gmail.com", "123456Aa", "Maksim", "Nyashin", MainActivity.this);
+        FoneService.getToken(user, MainActivity.this);
         taskListAdapter = new TaskListAdapter(TaskList.getInstance(MainActivity.this).getDataBase().getAllNotesFromDataBase());
 
         startAll();
@@ -144,25 +129,29 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
 
     public static String getToken()
     {
-        return token;
+        return user.getToken();
     }
     public static void setToken(String newToken)
     {
-        token = newToken;
+        user.setToken(newToken);
     }
 
     public static String getUsername(){
-        return username;
+        return user.getLogin();
     }
     public static void  setUsername(String newUsername){
-        username = newUsername;
+        user.setLogin(newUsername);
     }
 
     public static String getPassword(){
-        return password;
+        return user.getPassword();
     }
     public static void  setPassword(String newPassword){
-        password = newPassword;
+        user.setPassword(newPassword);
+    }
+
+    public static User getUser() {
+        return user;
     }
 
     @Override

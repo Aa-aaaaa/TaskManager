@@ -14,6 +14,7 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Maxim on 19.01.2018.
@@ -22,211 +23,15 @@ import retrofit2.http.Path;
 public interface TalkingToServerService {
     @FormUrlEncoded
     @POST("tasks/")
-    Call<AddTask> serverAddTask(@Header("Authorization") String token, @Field("name") String name, @Field("end_time") String time, @Field("description") String description);
-    class AddTask {
-        @SerializedName("id")
-        @Expose
-        private Long id;
-        @SerializedName("name")
-        @Expose
-        private String name;
-        @SerializedName("description")
-        @Expose
-        private String description;
-        @SerializedName("end_time")
-        @Expose
-        private String endTime;
-        @SerializedName("owner")
-        @Expose
-        private Owner owner;
-        @SerializedName("access_list")
-        @Expose
-        private List<Object> accessList = null;
-
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getEndTime() {
-            return endTime;
-        }
-
-        public void setEndTime(String endTime) {
-            this.endTime = endTime;
-        }
-
-        public Owner getOwner() {
-            return owner;
-        }
-
-        public void setOwner(Owner owner) {
-            this.owner = owner;
-        }
-
-        public List<Object> getAccessList() {
-            return accessList;
-        }
-
-        public void setAccessList(List<Object> accessList) {
-            this.accessList = accessList;
-        }
-
-        @Override
-        public String toString() {
-            return id + " " + name + " " + endTime + " " + description;
-        }
-        class Owner
-        {
-
-            @SerializedName("email")
-            @Expose
-            private String email;
-
-            public String getEmail() {
-                return email;
-            }
-
-            public void setEmail(String email) {
-                this.email = email;
-            }
-
-            @Override
-            public String toString() {
-                return email;
-            }
-        }
-
-    }
+    Call<ServerTask> serverAddTask(@Header("Authorization") String token, @Field("name") String name, @Field("end_time") String time, @Field("description") String description);
 
     @FormUrlEncoded
     @PUT("tasks/{taskid}/")
-    Call<UpdateTask> serverUpdateTask(@Path("taskid") Long taskid, @Header("Authorization") String token, @Field("name") String name, @Field("end_time") String time, @Field("description") String description);
-    class UpdateTask{
-        @SerializedName("id")
-        @Expose
-        private Long id;
-        @SerializedName("name")
-        @Expose
-        private String name;
-        @SerializedName("description")
-        @Expose
-        private String description;
-        @SerializedName("end_time")
-        @Expose
-        private String endTime;
-        @SerializedName("owner")
-        @Expose
-        private Owner owner;
-        @SerializedName("access_list")
-        @Expose
-        private List<Object> accessList = null;
+    Call<ServerTask> serverUpdateTask(@Path("taskid") Long taskid, @Header("Authorization") String token, @Field("name") String name, @Field("end_time") String time, @Field("description") String description);
 
-        public Long getId() {
-            return id;
-        }
+    @GET("tasks/{taskid}/")
+    Call<ServerTask> serverGetTask(@Path("taskid") long taskid, @Header("Authorization") String token);
 
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getEndTime() {
-            return endTime;
-        }
-
-        public void setEndTime(String endTime) {
-            this.endTime = endTime;
-        }
-
-        public Owner getOwner() {
-            return owner;
-        }
-
-        public void setOwner(Owner owner) {
-            this.owner = owner;
-        }
-
-        public List<Object> getAccessList() {
-            return accessList;
-        }
-
-        public void setAccessList(List<Object> accessList) {
-            this.accessList = accessList;
-        }
-
-        public class Owner {
-
-            @SerializedName("email")
-            @Expose
-            private String email;
-            @SerializedName("last_name")
-            @Expose
-            private String lastName;
-            @SerializedName("first_name")
-            @Expose
-            private String firstName;
-
-            public String getEmail() {
-                return email;
-            }
-
-            public void setEmail(String email) {
-                this.email = email;
-            }
-
-            public String getLastName() {
-                return lastName;
-            }
-
-            public void setLastName(String lastName) {
-                this.lastName = lastName;
-            }
-
-            public String getFirstName() {
-                return firstName;
-            }
-
-            public void setFirstName(String firstName) {
-                this.firstName = firstName;
-            }
-
-        }
-    }
 
     @FormUrlEncoded
     @POST("auth/login/")
@@ -250,9 +55,6 @@ public interface TalkingToServerService {
             return token;
         }
     }
-
-    @DELETE("tasks/{taskid}/")
-    Call<UpdateTask> serverDeleteTask(@Path("taskid") Long taskid, @Header("Authorization") String token);
 
     @FormUrlEncoded
     @POST("auth/register/")
@@ -298,6 +100,37 @@ public interface TalkingToServerService {
         }
     }
 
+    @GET("user/")
+    Call<List<User>> serverGetAllUsers(@Header("Authorization") String token);
+
+
+    @GET("user/{userid}/")
+    Call<User> serverGetUser(@Path("userid") long userid, @Header("Authorization") String token);
+
+    @GET("user/self/")
+    Call<User> serverGetMyself(@Header("Authorization") String token);
+
+
     @GET("tasks/")
-    Call<List<AddTask>> serverAddAllFromServer(@Header("Authorization") String token);
+    Call<List<ServerTask>> serverGetAll(@Query("owner_id") long oener_id, @Header("Authorization") String token);
+
+    @GET("tasks/wall/")
+    Call<List<ServerTask>> serverGetWall(@Header("Authorization") String token);
+
+
+    @DELETE("tasks/{taskid}/")
+    Call<Void> serverDeleteTask(@Path("taskid") Long taskid, @Header("Authorization") String token);
+
+    @POST("user/{userid}/subscribe/")
+    Call<Void> serverSubscribe(@Path("userid") long userid, @Header("Authorization") String token);
+
+    @POST("user/{userid}/unsubscribe/")
+    Call<Void> serverUnsubscribe(@Path("userid") long userid, @Header("Authorization") String token);
+
+    @POST("tasks/{taskid}/like/")
+    Call<Void> serverLike(@Path("taskid") long taskid, @Header("Authorization") String token);
+
+    @POST("tasks/{taskid}/unlike/")
+    Call<Void> serverUnlike(@Path("taskid") long taskid, @Header("Authorization") String token);
+
 }

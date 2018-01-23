@@ -37,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "Password is too short", Toast.LENGTH_SHORT);
                     return;
                 }
-                FoneService.registration(email, password, name, lastName, RegisterActivity.this);
+                FoneService.registration(new User(email, password, name, lastName), RegisterActivity.this);
             }
         });
     }
