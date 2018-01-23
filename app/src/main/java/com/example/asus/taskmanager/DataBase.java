@@ -112,24 +112,4 @@ public class DataBase extends SQLiteOpenHelper {
         cursor.close();
         return task;
     }
-
-    public void addAllToGlobalDB()
-    {
-        Cursor cursor = db.rawQuery("SELECT * FROM " + table_name +
-                " WHERE " + table_name + ".GLOBALID = -1", null);
-        boolean hasNextStep = cursor.moveToFirst();
-        while (hasNextStep)
-        {
-            String name = cursor.getString(cursor.getColumnIndex(key_name));
-            MyDate date = new MyDate();
-            date.setString(cursor.getString(cursor.getColumnIndex(key_date)));
-            String description = cursor.getString(cursor.getColumnIndex(key_description));
-            Long dataBaseId = cursor.getLong(cursor.getColumnIndex("_ID"));
-            Long globalDataBaseId = cursor.getLong(cursor.getColumnIndex(key_global_id));
-            Task task = new Task(name, date, description, dataBaseId);
-            task.setGlobalDataBaseId(globalDataBaseId);
-            FoneService.addTask(task, context);
-            hasNextStep = cursor.moveToNext();
-        }
-    }
 }

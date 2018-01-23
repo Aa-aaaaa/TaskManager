@@ -1,5 +1,6 @@
 package com.example.asus.taskmanager.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -7,9 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.asus.taskmanager.FoneService;
 import com.example.asus.taskmanager.R;
+import com.example.asus.taskmanager.TaskList;
 import com.example.asus.taskmanager.User;
+import com.example.asus.taskmanager.Utils;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -41,7 +43,18 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "Password is too short", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                FoneService.registration(new User(email, password, name, lastName), RegisterActivity.this);
+                User.registration(new User(email, password, name, lastName), RegisterActivity.this, new TaskList.PerformObject() {
+                    @Override
+                    public void perform(Object object) {
+                        MainActivity.getUser().setUser((User)object);
+                        RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                    }
+                }, new Utils.OnErrorCallback() {
+                    @Override
+                    public void perform() {
+
+                    }
+                });
             }
         });
     }

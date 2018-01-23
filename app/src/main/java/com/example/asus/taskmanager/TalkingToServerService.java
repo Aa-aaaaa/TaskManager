@@ -107,7 +107,7 @@ public interface TalkingToServerService {
     @GET("user/{userid}/")
     Call<User> serverGetUser(@Path("userid") long userid, @Header("Authorization") String token);
 
-    @GET("user/self/")
+    @GET("user/myself/")
     Call<User> serverGetMyself(@Header("Authorization") String token);
 
 
