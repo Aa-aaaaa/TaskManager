@@ -3,6 +3,7 @@ package com.example.asus.taskmanager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.asus.taskmanager.activities.MainActivity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -117,6 +118,8 @@ public class User {
     @Override
     public String toString() {
         return id + " " + email + " " + password + " " + firstName + " " + lastName + " " + token;
+    }
+
     public void setInfoFromSP(Context context) // Gets info from Shared Preferences and adds it to user
     {
         SharedPreferences sharedPreferences = context.

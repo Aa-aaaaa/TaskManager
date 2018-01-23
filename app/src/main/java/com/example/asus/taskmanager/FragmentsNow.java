@@ -1,5 +1,7 @@
 package com.example.asus.taskmanager;
 
+import com.example.asus.taskmanager.activities.FeedActivity;
+import com.example.asus.taskmanager.fragments.FeedFragment;
 import com.example.asus.taskmanager.fragments.MyProfileFragment;
 import com.example.asus.taskmanager.fragments.EmptyFragment;
 import com.example.asus.taskmanager.fragments.TaskListFragment;
@@ -7,11 +9,12 @@ import com.example.asus.taskmanager.fragments.TaskShowFragment;
 
 public class FragmentsNow {
     private static FragmentsNow fragmentsNow;
-    private boolean list, show, empty, profile;
+    private boolean list, show, empty, profile, feed;
     private TaskListFragment taskListFragment;
     private TaskShowFragment taskShowFragment;
     private EmptyFragment emptyFragment;
     private MyProfileFragment myProfileFragment;
+    private FeedFragment feedFragment;
     private boolean closeAll;
     private int number_of_fragment_block;
 
@@ -20,10 +23,12 @@ public class FragmentsNow {
         taskShowFragment = null;
         emptyFragment = null;
         myProfileFragment = null;
+        feedFragment = null;
         list = false;
         show = false;
         empty = false;
         profile = false;
+        feed = false;
         number_of_fragment_block = 1;
         closeAll = false;
     }
@@ -51,7 +56,9 @@ public class FragmentsNow {
         this.list = list;
         this.show = show;
         this.empty = empty;
+        this.feed = false;
         this.profile = false;
+        this.feedFragment = null;
         this.myProfileFragment = null;
         this.number_of_fragment_block = 1;
     }
@@ -63,9 +70,34 @@ public class FragmentsNow {
         this.taskShowFragment = null;
         this.empty = false;
         this.emptyFragment = null;
+        this.feed = false;
+        this.feedFragment = null;
         this.profile = true;
         this.myProfileFragment = new MyProfileFragment();
         this.number_of_fragment_block = 2;
+    }
+
+    public void setFeed() {
+        this.list = false;
+        this.taskListFragment = null;
+        this.show = false;
+        this.taskShowFragment = null;
+        this.empty = false;
+        this.emptyFragment = null;
+        this.profile = false;
+        this.myProfileFragment = null;
+        this.feed = true;
+        this.feedFragment = new FeedFragment();
+        this.number_of_fragment_block = 3;
+    }
+
+    public void setFind() {
+
+        this.number_of_fragment_block = 4;
+    }
+
+    public void clearAll() {
+
     }
 
     public TaskShowFragment getTSF()
@@ -85,6 +117,10 @@ public class FragmentsNow {
 
     public MyProfileFragment getMPF() {
         return myProfileFragment;
+    }
+
+    public FeedFragment getFF() {
+        return feedFragment;
     }
 
     public void setTSF(long dataBaseId)

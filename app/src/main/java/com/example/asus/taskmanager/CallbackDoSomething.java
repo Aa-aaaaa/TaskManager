@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.asus.taskmanager.activities.LoginActivity;
+import com.example.asus.taskmanager.activities.MainActivity;
+
 import java.util.List;
 
 /**
@@ -17,11 +20,7 @@ public class CallbackDoSomething {
     public static void callbackGetToken(TalkingToServerService.Token token, Context context)
     {
         if (token != null) {
-            MainActivity.setToken(token.getToken());
-            SharedPreferences sharedPreferences = context.getSharedPreferences("Settings", context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("token", token.getToken());
-            editor.commit();
+            MainActivity.getUser().succesfullLogin(context, token.getToken());
 
             context.startActivity(new Intent(context.getApplicationContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             Log.d("Token", "getToken: " + token.getToken());
@@ -36,7 +35,7 @@ public class CallbackDoSomething {
 
     public  static void callbackRegistration(TalkingToServerService.RegisterUser registerUser, Context context, User user)
     {
-        if (registerUser.getStatus())
+        if (registerUser != null)
         {
             MainActivity.getUser().setUser(user);
             Log.d(TAG, "Registration finished succesfully");

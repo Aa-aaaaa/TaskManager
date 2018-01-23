@@ -56,8 +56,10 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
                         startMyProfile();
                         return true;
                     case R.id.three:
+                        startFeed();
                         return true;
                     case id.four:
+                        startFind();
                         return true;
                     case id.five:
                         fragmentsNow.setNumber_of_fragment_block(5);
@@ -83,9 +85,11 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
                 bottomNavigationView.setSelectedItemId(id.two);
                 return;
             case 3:
+                startFeed();
                 bottomNavigationView.setSelectedItemId(id.three);
                 return;
             case 4:
+                startFind();
                 bottomNavigationView.setSelectedItemId(id.four);
                 return;
         }
@@ -139,6 +143,20 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         fragmentsNow.setCloseAll(false);
     }
 
+    private void startFeed()
+    {
+        fragmentsNow.setFeed();
+     //   getFragmentManager().beginTransaction().replace(id.all_screen, fragmentsNow.getFF()).commit();
+        fragmentsNow.setCloseAll(false);
+    }
+
+    private void startFind()
+    {
+        fragmentsNow.setFind();
+
+        fragmentsNow.setCloseAll(false);
+    }
+
     @Override
     public void onTaskListDataListener(Bundle bundle) {
         fragmentsNow.setMyTasks(false, true, false);
@@ -186,5 +204,10 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
 
     public static void setUser(User user) {
         MainActivity.user = user;
+    }
+
+    public static String getToken()
+    {
+        return user.getToken();
     }
 }

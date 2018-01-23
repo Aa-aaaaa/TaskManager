@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.example.asus.taskmanager.activities.MainActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +79,7 @@ public class FoneService extends Service {
     public static void addTask(Task task, final Context context)
     {
         TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
-        Call<ServerTask> call = talkingToServerService.serverAddTask(addToToken + MainActivity.getToken(), task.getName(), task.getTime().getStringForDB(), task.getDescription());
+        Call<ServerTask> call = talkingToServerService.serverAddTask(addToToken + MainActivity.getUser().getToken(), task.getName(), task.getTime().getStringForDB(), task.getDescription());
         CallbackList.callbackServerTask(call, context, task, "addTask");
     }
 
