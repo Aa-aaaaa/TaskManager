@@ -1,11 +1,11 @@
-package com.example.asus.taskmanager;
+package com.example.asus.taskmanager.fragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +14,11 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.example.asus.taskmanager.MyDate;
+import com.example.asus.taskmanager.R;
+import com.example.asus.taskmanager.Task;
+import com.example.asus.taskmanager.TaskList;
 
 import java.util.Calendar;
 
@@ -44,7 +49,7 @@ public class TaskShowFragment extends Fragment  {
 
     private boolean checkData(long index, String name, String time, String description) {
         MyDate myDate = new MyDate();
-        if (!myDate.setTime(time)) {
+        if (!myDate.setTime(time) || myDate.getTime() < Calendar.getInstance().getTimeInMillis()) {
             Toast.makeText(getActivity(), "Bad date", Toast.LENGTH_SHORT).show();
             return false;
         } else if (name.length() > 50 || name.length() < 1) {
@@ -131,7 +136,7 @@ public class TaskShowFragment extends Fragment  {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       setRetainInstance(true);
+        setRetainInstance(true);
     }
 
 }

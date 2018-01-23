@@ -1,12 +1,16 @@
-package com.example.asus.taskmanager;
+package com.example.asus.taskmanager.activities;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.example.asus.taskmanager.FoneService;
+import com.example.asus.taskmanager.R;
+import com.example.asus.taskmanager.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,8 +37,8 @@ public class LoginActivity extends AppCompatActivity {
                 String password = ((EditText)findViewById(R.id.etPassword)).getText().toString();
 
                 Log.d("EMAIL + PASSWORD", email + " " + password);
-                MainActivity.getUser().setUser(new User(email, password));
-                FoneService.getToken(MainActivity.getUser(), LoginActivity.this);
+                User user = new User(email, password);
+                FoneService.getToken(user, LoginActivity.this);
             }
         });
     }
