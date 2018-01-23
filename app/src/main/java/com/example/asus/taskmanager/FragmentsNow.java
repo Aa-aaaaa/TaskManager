@@ -1,5 +1,6 @@
 package com.example.asus.taskmanager;
 
+import com.example.asus.taskmanager.fragments.MyProfileFragment;
 import com.example.asus.taskmanager.fragments.EmptyFragment;
 import com.example.asus.taskmanager.fragments.TaskListFragment;
 import com.example.asus.taskmanager.fragments.TaskShowFragment;

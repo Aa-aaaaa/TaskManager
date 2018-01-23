@@ -12,19 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity" />
-
-        <receiver android:name=".NotificationPublisher" />
-
-        <activity android:name=".activities.LoginActivity" />
-
-        <activity android:name=".activities.RegisterActivity" />
-
-        <activity android:name=".activities.MyProfileActivity" />
-
         <activity
-            android:name=".activities.FriendsActivity"
-            android:label="@string/title_activity_friends"
+            android:name=".activities.MainActivity"
+            android:label="TaskManager"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -33,6 +23,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".NotificationPublisher" />
+
+        <activity android:name=".activities.LoginActivity" />
+
+        <activity android:name=".activities.RegisterActivity" />
+
+        <activity
+            android:name=".activities.FriendsActivity" />
 
         <receiver android:name=".NotificationPublisher" />
 

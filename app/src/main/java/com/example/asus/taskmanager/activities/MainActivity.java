@@ -11,8 +11,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.asus.taskmanager.FragmentsNow;
-import com.example.asus.taskmanager.MyProfileFragment;
 import com.example.asus.taskmanager.R;
+import com.example.asus.taskmanager.fragments.MyProfileFragment;
 import com.example.asus.taskmanager.fragments.TaskListFragment;
 import com.example.asus.taskmanager.fragments.TaskShowFragment;
 import com.example.asus.taskmanager.User;
@@ -34,6 +34,15 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_main);
+
+        user.setInfoFromSP(MainActivity.this);
+        if (user.getToken() == null)
+        {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class).
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            finish();
+        }
+
         bottomNavigationView = (BottomNavigationView)findViewById(id.bottom_navigation);
         startAll();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -54,21 +63,14 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
                         fragmentsNow.setNumber_of_fragment_block(5);
                         startAll();
                         return true;
-                };
+                }
                 return false;
             }
         });
     }
 
     void startAll() {
- /*       user.setInfoFromSP(MainActivity.this);
-        if (user.getToken() == null)
-        {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class).
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-            finish();
-        }
-   */     switch (fragmentsNow.getNumber_of_fragment_block()) {
+        switch (fragmentsNow.getNumber_of_fragment_block()) {
             case 5:
                 fragmentsNow.setMyTasks(false, true, false);
                 fragmentsNow.setNumber_of_fragment_block(1);

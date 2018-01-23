@@ -183,14 +183,14 @@ public class FoneService extends Service {
                             context.startActivity(new Intent(context, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             ((Activity)context).finish();
                         }
-                        else
-                            Log.e("JSON", "Registration faild");
-                        break;
-                    case ("deleting"):
-                        Log.d("JSON", "afterWorking: " + jObject.toString());
-                        break;
-                    case ("updating"):
-                        Log.d("JSON", "afterWorking: " + jObject.toString());
+                        Log.d("JSON", "aft\n" +
+                                "                        else\n" +
+                                "                            Log.e(\"JSON\", \"Registration faild\");\n" +
+                                "                        break;\n" +
+                                "                    case (\"deleting\"):\n" +
+                                "                        Log.d(\"JSON\", \"afterWorking: \" + jObject.toString());\n" +
+                                "                        break;\n" +
+                                "                    case (\"updating\"):erWorking: " + jObject.toString());
                 }
                 Log.d("JSONFoneService", operation + " has finished succesfully");
 
