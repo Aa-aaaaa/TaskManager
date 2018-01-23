@@ -27,11 +27,8 @@
         <receiver android:name=".NotificationPublisher" />
 
         <activity android:name=".activities.LoginActivity" />
-
         <activity android:name=".activities.RegisterActivity" />
-
-        <activity
-            android:name=".activities.FriendsActivity" />
+        <activity android:name=".activities.FriendsActivity" />
 
         <receiver android:name=".NotificationPublisher" />
 
@@ -39,6 +36,7 @@
             android:name=".FoneService"
             android:enabled="true"
             android:exported="true" />
+
     </application>
 
 </manifest>

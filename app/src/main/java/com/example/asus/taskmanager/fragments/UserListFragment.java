@@ -42,8 +42,7 @@ public class UserListFragment extends Fragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_user_list_fragment, container, false);
-        Toast.makeText(getActivity(), "KOK", Toast.LENGTH_LONG).show();
+        View view = inflater.inflate(R.layout.user_list_fragment, container, false);
 
         List<User> userList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
