@@ -44,6 +44,7 @@ public class MyProfileFragment extends Fragment {
         tvFullName.setText(MainActivity.getUser().getToken());
         //tvEmail.setText(MainActivity.getUser().getUsername());
 
+
         Button bLogout = view.findViewById(R.id.bLogout);
         bLogout.setOnClickListener(new View.OnClickListener() {
             @Override

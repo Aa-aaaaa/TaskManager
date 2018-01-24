@@ -2,12 +2,19 @@ package com.example.asus.taskmanager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.asus.taskmanager.activities.MainActivity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Maxim on 21.01.2018.
@@ -30,6 +37,9 @@ public class User {
     @SerializedName("subscribed_on")
     @Expose
     private List<Long> subscribedOn;
+    @SerializedName("subscribers")
+    @Expose
+    private  List<Long> subscribers;
     private String token;
     public User(String login, String password, String firstName, String lastName)
     {
@@ -90,6 +100,13 @@ public class User {
         this.subscribedOn = subscribedOn;
     }
 
+    public List<Long> getSubscribers() {
+        return this.subscribers;
+    }
+    public void setSubscribers(List<Long> subscribers) {
+        this.subscribers = subscribers;
+    }
+
     public String getToken(){
         return this.token;
     }
@@ -141,5 +158,182 @@ public class User {
         SharedPreferences sharedPreferences = context.
                 getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
         sharedPreferences.edit().remove("token").commit();
+    }
+
+    public static void getToken(final User user, final Context context, final TaskList.PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
+    {
+        if (user.getToken() == null) {
+            Call<TalkingToServerService.Token> call = MainActivity.getTalkingToServerService().serverGetToken(user.getLogin(), user.getPassword());
+            call.enqueue(new Callback<TalkingToServerService.Token>() {
+                @Override
+                public void onResponse(Call<TalkingToServerService.Token> call, Response<TalkingToServerService.Token> response) {
+                    if (!response.isSuccessful())
+                    {
+                        onErrorCallback.perform();
+                        getMyself(new TaskList.PerformObject() {
+                            @Override
+                            public void perform(Object object) {
+                                User user1 = (User) object;
+                                user1.setToken(user.getToken());
+                                user1.setPassword(user.getPassword());
+                                MainActivity.setUser(user1);
+                            }
+                        }, new Utils.OnErrorCallback() {
+                            @Override
+                            public void perform() {
+                                Log.e(TAG, "perform: Error Happened");
+                            }
+                        });
+                        return;
+                    }
+                    performObject.perform(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<TalkingToServerService.Token> call, Throwable t) {
+                    onErrorCallback.perform();
+                }
+            });
+        }
+        else
+            getMyself(new TaskList.PerformObject() {
+                @Override
+                public void perform(Object object) {
+                    User user1 = (User) object;
+                    user1.setToken(user.getToken());
+                    user1.setPassword(user.getPassword());
+                    MainActivity.setUser(user1);
+                }
+            }, new Utils.OnErrorCallback() {
+                @Override
+                public void perform() {
+                    Log.e(TAG, "perform: Error Happened");
+                }
+            });
+    }
+
+    public static void getMyself(final TaskList.PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
+    {
+        Call<User> call = MainActivity.getTalkingToServerService().serverGetMyself(MainActivity.getAddToToken() + MainActivity.getToken());
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (!response.isSuccessful())
+                {
+                    onErrorCallback.perform();
+                    return;
+                }
+                performObject.perform(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                onErrorCallback.perform();
+            }
+        });
+    }
+
+    public static void registration(User user, final Context context, final TaskList.PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
+    {
+        Call<TalkingToServerService.RegisterUser> call = MainActivity.getTalkingToServerService().serverRegisterUser(user.getLogin(), user.getPassword(), user.getPassword(), user.getLastName(), user.getFirstName());
+        call.enqueue(new Callback<TalkingToServerService.RegisterUser>() {
+            @Override
+            public void onResponse(Call<TalkingToServerService.RegisterUser> call, Response<TalkingToServerService.RegisterUser> response) {
+                if (!response.isSuccessful())
+                {
+                    onErrorCallback.perform();
+                }
+                performObject.perform(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<TalkingToServerService.RegisterUser> call, Throwable t) {
+                onErrorCallback.perform();
+            }
+        });
+    }
+
+    public static void getAllUsers(final TaskList.PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
+    {
+        Call<List<User>> call = MainActivity.getTalkingToServerService().serverGetAllUsers(MainActivity.getAddToToken() + MainActivity.getToken());
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (!response.isSuccessful())
+                {
+                    onErrorCallback.perform();
+                    return;
+                }
+                performObject.perform(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                onErrorCallback.perform();
+            }
+        });
+    }
+
+    public static void subscribe(long id, final TaskList.PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
+    {
+        Call<Void> call = MainActivity.getTalkingToServerService().serverSubscribe(id, MainActivity.getAddToToken() + MainActivity.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful())
+                {
+                    onErrorCallback.perform();
+                    return;
+                }
+                performObject.perform(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                onErrorCallback.perform();
+            }
+        });
+    }
+
+    public static void unsubscribe(long id, final TaskList.PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
+    {
+        Call<Void> call = MainActivity.getTalkingToServerService().serverUnsubscribe(id, MainActivity.getAddToToken() + MainActivity.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful())
+                {
+                    onErrorCallback.perform();
+                    return;
+                }
+                performObject.perform(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                onErrorCallback.perform();
+            }
+        });
+    }
+
+    public static void getUser(long id, final TaskList.PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
+    {
+        Call<User> call = MainActivity.getTalkingToServerService().serverGetUser(id, MainActivity.getAddToToken() + MainActivity.getToken());
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (!response.isSuccessful())
+                {
+                    onErrorCallback.perform();
+                    return;
+                }
+                performObject.perform(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                onErrorCallback.perform();
+            }
+        });
     }
 }

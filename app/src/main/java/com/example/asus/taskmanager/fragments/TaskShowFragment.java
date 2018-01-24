@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
-import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,10 @@ import android.widget.Toast;
 
 import com.example.asus.taskmanager.MyDate;
 import com.example.asus.taskmanager.R;
+import com.example.asus.taskmanager.ServerTask;
 import com.example.asus.taskmanager.Task;
 import com.example.asus.taskmanager.TaskList;
+import com.example.asus.taskmanager.Utils;
 
 import java.util.Calendar;
 
@@ -56,11 +59,35 @@ public class TaskShowFragment extends Fragment  {
             Toast.makeText(getActivity(), "Bad name", Toast.LENGTH_SHORT).show();
             return false;
         }
+        final Task tTask = new Task(name, myDate, description);
         if (index < 0)
-            TaskList.getInstance(getActivity()).addTask(new Task(name, myDate, description));
+            TaskList.getInstance(getActivity()).addTask(tTask, new TaskList.PerformObject() {
+                @Override
+                public void perform(Object object) {
+                    ServerTask task = (ServerTask)object;
+                    tTask.setGlobalDataBaseId(task.getId());
+                    TaskList.getInstance(getActivity()).getDataBase().updateTask(tTask);
+                }
+            }, new Utils.OnErrorCallback() {
+                @Override
+                public void perform() {
+                }
+            });
         else
-            TaskList.getInstance(getActivity()).changeTask(new Task(name, myDate, description, (long)index,
-                    TaskList.getInstance(getActivity()).getDataBase().getTaskById((long)index).getGlobalDataBaseId()));
+            TaskList.getInstance(getActivity()).changeTask(new Task(name, myDate, description, (long) index,
+                    TaskList.getInstance(getActivity()).getDataBase().getTaskById((long) index).getGlobalDataBaseId()), new TaskList.PerformObject() {
+                @Override
+                public void perform(Object object) {
+                    //successfully updated
+                    Log.d("DEBUGMAX", "perform: " + object.toString());
+                }
+            }, new Utils.OnErrorCallback() {
+                @Override
+                public void perform() {
+                    //unsuccessfully updated
+                    Log.e("DEBUGMAX", "perform: UpdateError");
+                }
+            });
         return true;
     }
 
@@ -113,7 +140,17 @@ public class TaskShowFragment extends Fragment  {
             @Override
             public void onClick(View view) {
                 if (index > 0)
-                    TaskList.getInstance(getActivity()).deleteTask(index);
+                    TaskList.getInstance(getActivity()).deleteTask(index, new TaskList.PerformObject() {
+                        @Override
+                        public void perform(Object object) {
+                            //Successfully deleted
+                        }
+                    }, new Utils.OnErrorCallback() {
+                        @Override
+                        public void perform() {
+                            //Unsuccessfully deleted
+                        }
+                    });
                 go_next();
             }
         });

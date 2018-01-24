@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
@@ -14,16 +15,25 @@ import android.view.MenuItem;
 import com.example.asus.taskmanager.FragmentsNow;
 import com.example.asus.taskmanager.R;
 import com.example.asus.taskmanager.fragments.FeedFragment;
+import com.example.asus.taskmanager.TalkingToServerService;
+import com.example.asus.taskmanager.User;
 import com.example.asus.taskmanager.fragments.MyProfileFragment;
 import com.example.asus.taskmanager.fragments.TaskListFragment;
 import com.example.asus.taskmanager.fragments.TaskShowFragment;
-import com.example.asus.taskmanager.User;
 
-import static com.example.asus.taskmanager.R.*;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.example.asus.taskmanager.R.id;
+import static com.example.asus.taskmanager.R.layout;
 
 public class MainActivity extends AppCompatActivity implements TaskListFragment.OnTaskListDataListener, TaskShowFragment.OnTaskShowDataListener, MyProfileFragment.OnMyProfileDataListener
 {
-    static private final String serverName = "http://salty-springs-72589.herokuapp.com/api/";
+    final static private String serverName = "http://salty-springs-72589.herokuapp.com/api/";
+    private static String addToToken = "Token ";
+    private static Retrofit retrofit = new Retrofit.Builder().baseUrl(serverName).addConverterFactory(GsonConverterFactory.create()).build();
+    private static TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+    private static String TAG = "DebugMax";
 
     static private User user = new User();
     static private FragmentsNow fragmentsNow = FragmentsNow.getInstance();
@@ -249,5 +259,34 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     public static String getToken()
     {
         return user.getToken();
+    }
+    public static void setToken(String newToken)
+    {
+        user.setToken(newToken);
+    }
+
+    public static String getUsername(){
+        return user.getLogin();
+    }
+    public static void  setUsername(String newUsername){
+        user.setLogin(newUsername);
+    }
+
+    public static String getPassword(){
+        return user.getPassword();
+    }
+    public static void  setPassword(String newPassword){
+        user.setPassword(newPassword);
+    }
+
+    public static String getAddToToken(){
+        return addToToken;
+    }
+    public static Retrofit getRetrofit(){
+        return retrofit;
+    }
+
+    public static TalkingToServerService getTalkingToServerService(){
+        return talkingToServerService;
     }
 }
