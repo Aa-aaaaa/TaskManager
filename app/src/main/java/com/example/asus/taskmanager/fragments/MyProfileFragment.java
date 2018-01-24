@@ -14,6 +14,10 @@ import com.example.asus.taskmanager.R;
 import com.example.asus.taskmanager.activities.MainActivity;
 
 public class MyProfileFragment extends Fragment {
+    @Override
+    public void onCreate(@org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     public interface OnMyProfileDataListener {
         void goLoginActivityListener();
@@ -28,11 +32,6 @@ public class MyProfileFragment extends Fragment {
         mListener = (OnMyProfileDataListener) activity;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -40,13 +39,10 @@ public class MyProfileFragment extends Fragment {
 
         TextView tvFullName = view.findViewById(R.id.tvFullName);
         TextView tvEmail = view.findViewById(R.id.tvEmail);
-
         tvFullName.setText(MainActivity.getUser().getToken());
         //tvEmail.setText(MainActivity.getUser().getUsername());
 
-
-        Button bLogout = view.findViewById(R.id.bLogout);
-        bLogout.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.bLogout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.goLoginActivityListener();

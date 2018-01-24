@@ -19,12 +19,7 @@ public class FragmentsNow {
     private int number_of_fragment_block;
 
     private FragmentsNow() {
-        taskListFragment = null;
-        taskShowFragment = null;
-        emptyFragment = null;
-        myProfileFragment = null;
-        feedFragment = null;
-        friendsFragment = null;
+        clearAll();
         number_of_fragment_block = 1;
         closeAll = false;
     }
@@ -72,28 +67,23 @@ public class FragmentsNow {
     }
 
     public void setFeed() {
-        this.taskListFragment = null;
-        this.taskShowFragment = null;
-        this.emptyFragment = null;
-        this.myProfileFragment = null;
-        this.friendsFragment = null;
+        clearAll();
         this.feedFragment = new FeedFragment();
         this.number_of_fragment_block = 3;
     }
 
     public void setFind() {
+        clearAll();
+        this.number_of_fragment_block = 4;
+    }
+
+    public void clearAll() {
         this.taskListFragment = null;
         this.taskShowFragment = null;
         this.emptyFragment = null;
         this.myProfileFragment = null;
         this.friendsFragment = null;
         this.feedFragment = null;
-
-        this.number_of_fragment_block = 4;
-    }
-
-    public void clearAll() {
-
     }
 
     public TaskShowFragment getTSF()

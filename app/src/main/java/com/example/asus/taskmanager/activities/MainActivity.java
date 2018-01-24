@@ -113,15 +113,32 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
+    private void clearAll()
+    {
+        if (fragmentsNow.getTSF() != null)
+            getFragmentManager().beginTransaction().remove(fragmentsNow.getTSF()).commit();
+        if (fragmentsNow.getMFF() != null)
+            getSupportFragmentManager().beginTransaction().remove(fragmentsNow.getMFF()).commit();
+        clearNotAll();
+      }
+
+    private void clearNotAll() {
+        if (fragmentsNow.getEF() != null)
+            getFragmentManager().beginTransaction().remove(fragmentsNow.getEF()).commit();
+        if (fragmentsNow.getFF() != null)
+            getFragmentManager().beginTransaction().remove(fragmentsNow.getFF()).commit();
+        if (fragmentsNow.getMPF() != null)
+            getSupportFragmentManager().beginTransaction().remove(fragmentsNow.getMPF()).commit();
+        if (fragmentsNow.getTLF() != null)
+            getFragmentManager().beginTransaction().remove(fragmentsNow.getTLF()).commit();
+    }
+
     private void startMyTasks()
     {
+        if (fragmentsNow.getMFF() != null)
+            getSupportFragmentManager().beginTransaction().remove(fragmentsNow.getMFF()).commit();
+        clearNotAll();
         fragmentsNow.setNumber_of_fragment_block(1);
-        if (getFragmentManager().findFragmentById(id.all_screen) != null)
-            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.all_screen)).commit();
-        if (getFragmentManager().findFragmentById(id.other) != null)
-            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.other)).commit();
-        if (check_land() && getFragmentManager().findFragmentById(id.list) != null)
-            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.list)).commit();
         if (fragmentsNow.getTSF() == null) {
             if (check_land()) {
                 fragmentsNow.setMyTasks(true, false, true);
@@ -150,13 +167,9 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
 
     private void startMyProfile()
     {
-        fragmentsNow.setNumber_of_fragment_block(2);
-        if (getFragmentManager().findFragmentById(id.all_screen) != null)
-            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.all_screen)).commit();
-        if (getFragmentManager().findFragmentById(id.other) != null)
-            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.other)).commit();
-        if (check_land() && getFragmentManager().findFragmentById(id.list) != null)
-            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.list)).commit();
+        clearNotAll();
+        if (fragmentsNow.getTSF() != null)
+            getFragmentManager().beginTransaction().remove(fragmentsNow.getTSF()).commit();
         if (fragmentsNow.getMFF() == null)
         {
             fragmentsNow.setMyProfile(false, true);
@@ -167,23 +180,20 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
             fragmentsNow.setMyProfile(true, false);
             getSupportFragmentManager().beginTransaction().replace(id.all_screen, fragmentsNow.getMFF()).commit();
         }
+        fragmentsNow.setCloseAll(false);
     }
 
     private void startFeed()
     {
+        clearAll();
         fragmentsNow.setFeed();
-        if (getFragmentManager().findFragmentById(id.all_screen) != null)
-            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.all_screen)).commit();
-        if (getFragmentManager().findFragmentById(id.other) != null)
-            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.other)).commit();
-        if (check_land() && getFragmentManager().findFragmentById(id.list) != null)
-            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.list)).commit();
-        getFragmentManager().beginTransaction().replace(id.all_screen, new FeedFragment()).commit();
-        fragmentsNow.setCloseAll(false);
+        getFragmentManager().beginTransaction().replace(id.all_screen, fragmentsNow.getFF()).commit();
+//        fragmentsNow.setCloseAll(false);
     }
 
     private void startFind()
     {
+        clearAll();
         fragmentsNow.setFind();
         if (getFragmentManager().findFragmentById(id.all_screen) != null)
             getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.all_screen)).commit();
