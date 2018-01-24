@@ -1,34 +1,29 @@
 package com.example.asus.taskmanager;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.asus.taskmanager.Activities.LoginActivity;
-import com.example.asus.taskmanager.Activities.MainActivity;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.asus.taskmanager.activities.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoneService extends Service {
-    private static String serverName = null;
-    private static String token = null;
-    private static DataBase dataBase = null;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-    final private static String name = "name";
-    final private static String description = "description";
-    final private static String date = "end_time";
+public class FoneService extends Service {
+    //static private String serverName = "http://siriustaskmanager.herokuapp.com/api/";
+    static private String serverName = "http://salty-springs-72589.herokuapp.com/api/";
+    //static private String serverName =  "10.21.136.185:8000/api/";
+    private static String addToToken = "Token ";
+
+    private static Retrofit retrofit = new Retrofit.Builder().baseUrl(serverName).addConverterFactory(GsonConverterFactory.create()).build();
+    static final private String TAG = "FoneService";
 
     public FoneService() {
     }
@@ -50,155 +45,123 @@ public class FoneService extends Service {
         //throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public static String getToken(User user, Context context)
+    public static String getToken(User user, final Context context)
     {
-        // TODO: get token from server
-        serverName = MainActivity.getServerName();
-        if (token == null) {
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("username", user.getUsername()));
-            params.add(new BasicNameValuePair("password", user.getPassword()));
-            new DoWithTask(context, params, "POST", "auth/login/", "login").execute((Task[])null);
+        if (user.getToken() == null) {
+            Log.d(TAG, "getToken: started " + user.getLogin() + " " + user.getPassword());
+            TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+            Call<TalkingToServerService.Token> call = talkingToServerService.serverGetToken(user.getLogin(), user.getPassword());
+            CallbackList.callbackToken(call, context);
         }
+        else
+            getMyself(context);
             //return "503712e87969da1ab86c6eafa9b0e6d1ac81441b";
-        return token;
+        return user.getToken();
     }
 
-    public static void registration(User user, Context context)
+    public static void registration(User user, final Context context)
     {
-        serverName = MainActivity.getServerName();
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("email", user.getUsername()));
-        params.add(new BasicNameValuePair("password1", user.getPassword()));
-        params.add(new BasicNameValuePair("password2", user.getPassword()));
-        params.add(new BasicNameValuePair("last_name", user.getPassword()));
-        params.add(new BasicNameValuePair("first_name", user.getPassword()));
-        new DoWithTask(context, params, "POST", "auth/register/", "registration").execute((Task[])null);
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        Call<TalkingToServerService.RegisterUser> call = talkingToServerService.serverRegisterUser(user.getLogin(), user.getPassword(), user.getPassword(), user.getLastName(), user.getFirstName());
+        CallbackList.callbackRegister(call, context, user);
     }
 
-    public static void addTask(Task task, Context context)
+    public static List<ServerTask> addAllTasksFromGlobalDB(Context context)
     {
-        token = getToken(MainActivity.getUser(), context);
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        serverName = MainActivity.getServerName();
-        params.add(new BasicNameValuePair(name, task.getName()));
-        params.add(new BasicNameValuePair(date, task.getTime().getStringForDB()));
-        Log.d("JSONFoneService", task.getTime().getStringForDB());
-        params.add(new BasicNameValuePair(description, task.getDescription()));
-        new DoWithTask(context, params, "POST", "tasks/", "add").execute(task);
-        //Log.d("JSONFoneService", token);
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        //TODO get ID from Server (there is no way to get it now (when I wrote this TODO))
+        MainActivity.getUser().setId(1);
+        Call<List<ServerTask>> call = talkingToServerService.serverGetAll(MainActivity.getUser().getId(), addToToken + MainActivity.getToken());
+        List<ServerTask> list= new ArrayList<>();
+        CallbackList.calbackListServerTask(call, context, "getAllTask", list);
+        return list;
     }
 
-    public static void updateTask(Task task, Context context)
+    public static void addTask(Task task, final Context context)
     {
-        token = getToken(MainActivity.getUser(), context);
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        serverName = MainActivity.getServerName();
-        params.add(new BasicNameValuePair(name, task.getName()));
-        params.add(new BasicNameValuePair(date, task.getTime().getStringForDB()));
-        params.add(new BasicNameValuePair(description, task.getDescription()));
-        new DoWithTask(context, params, "PUT", "tasks/" + task.getGlobalDataBaseId() + "/", "updating").execute(task);
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        Call<ServerTask> call = talkingToServerService.serverAddTask(addToToken + MainActivity.getUser().getToken(), task.getName(), task.getTime().getStringForDB(), task.getDescription());
+        CallbackList.callbackServerTask(call, context, task, "addTask");
     }
 
-    public static void deleteTask(Long globalId, Context context)
+    public static void updateTask(final Task task, final Context context)
     {
-        token = getToken(MainActivity.getUser(), context);
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        serverName = MainActivity.getServerName();
-        new DoWithTask(context, params, "DELETE", "tasks/" + globalId + "/", "deleting").execute((Task[])null);
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        Call<ServerTask> call = talkingToServerService.serverUpdateTask(task.getGlobalDataBaseId(),addToToken + MainActivity.getToken(), task.getName(), task.getTime().getStringForDB(), task.getDescription());
+        CallbackList.callbackServerTask(call, context, task, "updateTask");
     }
 
-    public static class DoWithTask extends AsyncTask<Task, Void, JSONObject>
+    public static void deleteTask(Long globalId, final Context context)
     {
-        static Context context = null;
-        private Long id;
-        private List<NameValuePair> params = null;
-        private String method = null;
-        private String suffix = null;
-        private String operation = null;
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        Call<Void> call = talkingToServerService.serverDeleteTask(globalId,"Token " + MainActivity.getToken());
+        CallbackList.callbackVoid(call, context, "deleteTask");
+    }
 
-        public DoWithTask(Context context, ArrayList<NameValuePair> params, String method, String suffix, String operation)
-        {
-            super();
-            this.context = context;
-            this.params = params;
-            this.method = method;
-            this.operation = operation;
-            this.suffix = suffix;
-        }
+    public static void getTask(Long taskid, Context context, Task task)
+    {
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        Call<ServerTask> call = talkingToServerService.serverGetTask(taskid, addToToken + MainActivity.getToken());
+        CallbackList.callbackServerTask(call, context, task, "getTask");
+    }
 
-        @Override
-        protected JSONObject doInBackground(Task... tasks) {
-            if (tasks != null)
-                return loadJSON(tasks[0]);
-            else
-                return loadJSON(null);
-        }
+    public static List<User> getAllUsers(Context context)
+    {
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        Call<List<User>> call = talkingToServerService.serverGetAllUsers(addToToken + MainActivity.getToken());
+        List<User> list = new ArrayList<>();
+        CallbackList.callbackListUser(call, context, list);
+        return list;
+    }
 
-        public JSONObject loadJSON(Task task)
-        {
-            if (task != null)
-                id = task.getDataBaseId();
-            JSONParser jsonParser = new JSONParser();
-            JSONObject json = jsonParser.makeHttpRequest(serverName + this.suffix, this.method, this.params, token);
-            return json;
-        }
+    public static void getUser(long userId, Context context, User user)
+    {
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        Call<User> call = talkingToServerService.serverGetUser(userId, addToToken + MainActivity.getToken());
+        CallbackList.callbackUser(call, context, "getUser", user);
+    }
 
-        @Override
-        protected void onPostExecute(JSONObject jsonObject) {
-            super.onPostExecute(jsonObject);
-            if (jsonObject != null)
-            {
-                afterWorking(jsonObject);
-            }
-        }
+    public static List<ServerTask> getWall(Context context)
+    {
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        Call<List<ServerTask>> call = talkingToServerService.serverGetWall(addToToken + MainActivity.getToken());
+        List<ServerTask> list = new ArrayList<>();
+        CallbackList.calbackListServerTask(call, context, "getWall", list);
+        return list;
+    }
 
-        private void afterWorking(JSONObject jObject)
-        {
-            try {
-                switch (operation) {
-                    case ("add"):
-                        Long gId = jObject.getLong("id");
-                        Task task = TaskList.getInstance(context).getTask(id);
-                        task.setGlobalDataBaseId(gId);
-                        TaskList.getInstance(context).getDataBase().updateTask(task);
-                        break;
-                    case ("login"):
-                        if (jObject.isNull("token"))
-                        {
-                            Toast.makeText(context.getApplicationContext(), "Wrong email or password", Toast.LENGTH_LONG).show();
-                            Log.d("LOGIN", "Can't sign in");
-                            return;
-                        }
-                        token = jObject.getString("token");
+    public static void subscribe(long userid, Context context)
+    {
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        Call<Void> call = talkingToServerService.serverSubscribe(userid, addToToken + MainActivity.getToken());
+        CallbackList.callbackVoid(call, context, "subscribe");
+    }
 
-                        MainActivity.getUser().succesfullLogin(context, token);
+    public static void unsubscribe(long userid, Context context)
+    {
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        Call<Void> call = talkingToServerService.serverUnsubscribe(userid, addToToken + MainActivity.getToken());
+        CallbackList.callbackVoid(call, context, "unsubscribe");
+    }
 
-                        context.startActivity(new Intent(context, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                        ((Activity)context).finish();
-                        break;
-                    case ("registration"):
-                        boolean isRegistered = jObject.getBoolean("status");
-                        if (isRegistered) {
-                            Log.d("JSON", "Registration finished succesfully");
-                            context.startActivity(new Intent(context, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                            ((Activity)context).finish();
-                        }
-                        else
-                            Log.e("JSON", "Registration faild");
-                        break;
-                    case ("deleting"):
-                        Log.d("JSON", "afterWorking: " + jObject.toString());
-                        break;
-                    case ("updating"):
-                        Log.d("JSON", "afterWorking: " + jObject.toString());
-                }
-                Log.d("JSONFoneService", operation + " has finished succesfully");
+    public static void like(long taskid, Context context)
+    {
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        Call<Void> call = talkingToServerService.serverLike(taskid, addToToken + MainActivity.getToken());
+        CallbackList.callbackVoid(call, context, "like");
+    }
 
-            } catch (JSONException e){
-                e.printStackTrace();
-                Log.e("JSONFoneService", e.toString());
-            }
-        }
+    public static void unlike(long taskid, Context context)
+    {
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        Call<Void> call = talkingToServerService.serverUnlike(taskid, addToToken + MainActivity.getToken());
+        CallbackList.callbackVoid(call, context, "unlike");
+    }
+
+    public static void getMyself(Context context)
+    {
+        TalkingToServerService talkingToServerService = retrofit.create(TalkingToServerService.class);
+        Call<User> call = talkingToServerService.serverGetMyself(addToToken + MainActivity.getToken());
+        CallbackList.callbackUser(call, context, "getMyself", MainActivity.getUser());
     }
 }

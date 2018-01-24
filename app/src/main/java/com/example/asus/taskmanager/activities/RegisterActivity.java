@@ -1,7 +1,7 @@
-package com.example.asus.taskmanager.Activities;
+package com.example.asus.taskmanager.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "Password is too short", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                FoneService.registration(new User(email, name, lastName, password), RegisterActivity.this);
+                FoneService.registration(new User(email, password, name, lastName), RegisterActivity.this);
             }
         });
     }

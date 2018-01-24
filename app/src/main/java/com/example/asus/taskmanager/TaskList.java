@@ -1,7 +1,6 @@
 package com.example.asus.taskmanager;
 
 import android.content.Context;
-import android.util.Log;
 
 public class TaskList {
     private static TaskList taskList;

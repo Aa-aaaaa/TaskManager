@@ -1,7 +1,5 @@
 package com.example.asus.taskmanager;
 
-import java.util.Date;
-
 public class Task
 {
     private MyDate time;
@@ -73,6 +71,9 @@ public class Task
     }
 
     public void setTime(long time) {
+        this.time.setTime(time);
+    }
+    public void setTime(String time) {
         this.time.setTime(time);
     }
 

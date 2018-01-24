@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.asus.taskmanager.Activities.MainActivity">
+    tools:context="com.example.asus.taskmanager.activities.MainActivity">
 
     <TextView
         android:id="@+id/tvFullName"
@@ -33,4 +33,23 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="Logout" />
+
+    <Button
+        android:id="@+id/bGoFollowing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bGoFollowers"
+        android:layout_alignStart="@+id/bGoFollowers"
+        android:layout_below="@+id/bGoFollowers"
+        android:layout_marginTop="32dp" />
+
+    <Button
+        android:id="@+id/bGoFollowers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bLogout"
+        android:layout_alignStart="@+id/bLogout"
+        android:layout_below="@+id/bLogout"
+        android:layout_marginTop="56dp" />
+
 </RelativeLayout>

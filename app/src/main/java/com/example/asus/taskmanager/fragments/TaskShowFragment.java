@@ -1,28 +1,26 @@
-package com.example.asus.taskmanager;
+package com.example.asus.taskmanager.fragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.text.DateFormat;
+import com.example.asus.taskmanager.MyDate;
+import com.example.asus.taskmanager.R;
+import com.example.asus.taskmanager.Task;
+import com.example.asus.taskmanager.TaskList;
+
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class TaskShowFragment extends Fragment  {
 
@@ -138,7 +136,11 @@ public class TaskShowFragment extends Fragment  {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       setRetainInstance(true);
+        setRetainInstance(true);
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
 }
