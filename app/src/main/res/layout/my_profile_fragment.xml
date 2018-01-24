@@ -1,55 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.asus.taskmanager.activities.MainActivity">
 
     <TextView
         android:id="@+id/tvFullName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="20dp"
         android:textSize="18sp"
         android:text="Full name" />
-
+1
     <TextView
         android:id="@+id/tvEmail"
-        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvFullName"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:text="Email"
         android:textSize="18sp" />
 
     <Button
-        android:id="@+id/bLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Logout" />
-
-    <Button
         android:id="@+id/bGoFollowing"
-        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/bGoFollowers"
-        android:layout_alignStart="@+id/bGoFollowers"
-        android:layout_below="@+id/bGoFollowers"
-        android:layout_marginTop="32dp" />
+        android:text="Following"
+        android:background="@color/colorPrimary"
+        android:layout_marginTop="8dp" />
 
     <Button
         android:id="@+id/bGoFollowers"
-        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/bLogout"
-        android:layout_alignStart="@+id/bLogout"
-        android:layout_below="@+id/bLogout"
-        android:layout_marginTop="56dp" />
+        android:text="Followers"
+        android:background="@color/colorPrimary"
+        android:layout_marginTop="8dp" />
 
-</RelativeLayout>
+    <Button
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"
+        android:layout_marginTop="8dp"
+        android:text="Change Name" />
+
+    <Button
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"
+        android:layout_marginTop="8dp"
+        android:text="Change password" />
+
+    <Button
+        android:id="@+id/bLogout"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"
+        android:layout_marginTop="8dp"
+        android:text="Logout" />
+
+</LinearLayout>
