@@ -32,11 +32,6 @@
 
         <receiver android:name=".NotificationPublisher" />
 
-        <service
-            android:name=".FoneService"
-            android:enabled="true"
-            android:exported="true" />
-
     </application>
 
 </manifest>

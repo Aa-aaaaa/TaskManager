@@ -8,15 +8,23 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.asus.taskmanager.FragmentsNow;
+import com.example.asus.taskmanager.MyDate;
 import com.example.asus.taskmanager.R;
+import com.example.asus.taskmanager.ServerTask;
 import com.example.asus.taskmanager.TalkingToServerService;
+import com.example.asus.taskmanager.Task;
+import com.example.asus.taskmanager.TaskList;
 import com.example.asus.taskmanager.User;
+import com.example.asus.taskmanager.Utils;
 import com.example.asus.taskmanager.fragments.MyProfileFragment;
 import com.example.asus.taskmanager.fragments.TaskListFragment;
 import com.example.asus.taskmanager.fragments.TaskShowFragment;
+
+import java.util.List;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -51,6 +59,55 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             finish();
         }
+        User.getMyself(new TaskList.PerformObject() {
+            @Override
+            public void perform(Object object) {
+                User user1 = (User) object;
+                user1.setToken(user.getToken());
+                user1.setPassword(user.getPassword());
+                MainActivity.setUser(user1);
+                MainActivity.getUser().successfullGotId(MainActivity.this, user.getId());
+                TaskList.getInstance(MainActivity.this).getAllTasksFromGlobalDataBase(new TaskList.PerformObject() {
+                    @Override
+                    public void perform(Object object) {
+                        List<ServerTask> list = (List<ServerTask>)object;
+                        Log.d(TAG, "perform: " + list.toString());
+                        for (ServerTask serverTask: list)
+                        {
+                            Task task = TaskList.getInstance(MainActivity.this).getDataBase().getTaskByGlobalId(serverTask.getId());
+                            if (task == null)
+                            {
+                                Log.d(TAG, "perform: " + serverTask.getEndTime());
+                                MyDate myDate = new MyDate();
+                                myDate.setTimeFromDB(serverTask.getEndTime());
+                                Task task1 = new Task(serverTask.getName(), myDate, serverTask.getDescription());
+                                TaskList.getInstance(MainActivity.this).getDataBase().addTask(task1);
+                            }
+                            else
+                            {
+                                Log.e(TAG, "perform: " + serverTask.getEndTime());
+                                task.setDescription(serverTask.getDescription());
+                                task.setName(serverTask.getName());
+                                task.getTime().setTimeFromDB(serverTask.getEndTime());
+                                TaskList.getInstance(MainActivity.this).getDataBase().updateTask(task);
+                            }
+                        }
+                    }
+                }, new Utils.OnErrorCallback() {
+                    @Override
+                    public void perform() {
+                        //
+                        Log.e("GettingAllTaskFailed", "perform: gETTINGaLLtASKSfAILED");
+                    }
+                });
+            }
+        }, new Utils.OnErrorCallback() {
+            @Override
+            public void perform() {
+                Log.e("GetMySelfError", "perform: Error Happened");
+            }
+        });
+
 
         bottomNavigationView = (BottomNavigationView)findViewById(id.bottom_navigation);
         startAll();

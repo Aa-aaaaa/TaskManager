@@ -27,13 +27,6 @@ public class TaskList {
         return taskList;
     }
 
-    /*public void addTask(Task task)
-    {
-        this.getDataBase().addTask(task);
-        //Log.d("KEK");
-        FoneService.addTask(task, thisContext);
-    }*/
-
     public void addTask(final Task task, final PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
     {
         this.getDataBase().addTask(task);
@@ -134,10 +127,13 @@ public class TaskList {
 
     public void getAllTasksFromGlobalDataBase(final PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
     {
+        Log.e(TAG, "getMyselfAllTasks: " + MainActivity.getToken());
+        Log.e(TAG, "getMyselfAllTasks: " + MainActivity.getUser().getId());
         Call<List<ServerTask>> call = MainActivity.getTalkingToServerService().serverGetAll(MainActivity.getUser().getId(), MainActivity.getAddToToken() + MainActivity.getToken());
         call.enqueue(new Callback<List<ServerTask>>() {
             @Override
             public void onResponse(Call<List<ServerTask>> call, Response<List<ServerTask>> response) {
+                Log.e(TAG, "onResponse: " + response.toString());
                 if (!response.isSuccessful())
                 {
                     onErrorCallback.perform();

@@ -112,4 +112,23 @@ public class DataBase extends SQLiteOpenHelper {
         cursor.close();
         return task;
     }
+
+    public Task getTaskByGlobalId(long dataBaseId)
+    {
+        Cursor cursor = db.rawQuery("SELECT * FROM " + table_name +
+                " WHERE " + table_name + "." + key_global_id +" = " + Long.toString(dataBaseId), null);
+        if (cursor.getCount() == 0)
+            return null;
+        cursor.moveToFirst();
+        MyDate date = new MyDate();
+        date.setTime(cursor.getString(cursor.getColumnIndex(key_date)));
+        Task task = new Task(
+                cursor.getString(cursor.getColumnIndex(key_name)),
+                date,
+                cursor.getString(cursor.getColumnIndex(key_description)),
+                cursor.getLong(cursor.getColumnIndex("_ID")));
+        task.setGlobalDataBaseId(cursor.getLong(cursor.getColumnIndex(key_global_id)));
+        cursor.close();
+        return task;
+    }
 }

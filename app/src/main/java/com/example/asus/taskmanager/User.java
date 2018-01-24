@@ -48,6 +48,7 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
     }
+
     public User(String login, String password)
     {
         this.email = login;
@@ -142,6 +143,8 @@ public class User {
         SharedPreferences sharedPreferences = context.
                 getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
         token = sharedPreferences.getString("token", null);
+        id = sharedPreferences.getLong("id", 0);
+        Log.e(TAG, "setInfoFromSP: " + id);
     }
 
     public void succesfullLogin(Context context, String token) // Adds token to Share Preferences, sets this.token
@@ -152,12 +155,21 @@ public class User {
         sharedPreferences.edit().putString("token", token).commit();
     }
 
+    public void successfullGotId(Context context, long id)
+    {
+        SharedPreferences sharedPreferences = context.
+                getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putLong("id", id).commit();
+        Log.e(TAG, "successfullGotId: error");
+    }
+
     public void logout(Context context)
     {
         this.token = null;
         SharedPreferences sharedPreferences = context.
                 getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
         sharedPreferences.edit().remove("token").commit();
+        sharedPreferences.edit().remove("id").commit();
     }
 
     public static void getToken(final User user, final Context context, final TaskList.PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
@@ -170,23 +182,28 @@ public class User {
                     if (!response.isSuccessful())
                     {
                         onErrorCallback.perform();
-                        getMyself(new TaskList.PerformObject() {
-                            @Override
-                            public void perform(Object object) {
-                                User user1 = (User) object;
-                                user1.setToken(user.getToken());
-                                user1.setPassword(user.getPassword());
-                                MainActivity.setUser(user1);
-                            }
-                        }, new Utils.OnErrorCallback() {
-                            @Override
-                            public void perform() {
-                                Log.e(TAG, "perform: Error Happened");
-                            }
-                        });
                         return;
                     }
+                    MainActivity.setToken(response.body().getToken());
                     performObject.perform(response.body());
+                    Log.e(TAG, "getMyself: " + MainActivity.getToken());
+                    User.getMyself(new TaskList.PerformObject() {
+                        @Override
+                        public void perform(Object object) {
+                            User user1 = (User) object;
+                            user1.setToken(MainActivity.getToken());
+                            user1.setPassword(MainActivity.getPassword());
+                            MainActivity.setUser(user1);
+                            MainActivity.getUser().successfullGotId(context, user1.getId());
+                            Log.e(TAG, "getMyself: " + MainActivity.getUser().getId());
+                        }
+                    }, new Utils.OnErrorCallback() {
+                        @Override
+                        public void perform() {
+                            Log.e(TAG, "perform: Error Happened token not Exists");
+                        }
+                    });
+                    Log.e(TAG, "getMyself: " + MainActivity.getUser().getId());
                 }
 
                 @Override
@@ -196,33 +213,42 @@ public class User {
             });
         }
         else
-            getMyself(new TaskList.PerformObject() {
+            User.getMyself(new TaskList.PerformObject() {
                 @Override
                 public void perform(Object object) {
                     User user1 = (User) object;
-                    user1.setToken(user.getToken());
-                    user1.setPassword(user.getPassword());
+                    user1.setToken(MainActivity.getToken());
+                    user1.setPassword(MainActivity.getPassword());
                     MainActivity.setUser(user1);
+                    MainActivity.getUser().successfullGotId(context, user1.getId());
                 }
             }, new Utils.OnErrorCallback() {
                 @Override
                 public void perform() {
-                    Log.e(TAG, "perform: Error Happened");
+                    Log.e(TAG, "perform: Error Happened token exists");
                 }
             });
     }
 
     public static void getMyself(final TaskList.PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
     {
+        Log.e(TAG, "getMyself: " + MainActivity.getToken());
+        /*if (MainActivity.getUser().getId() > 0)
+        {
+            performObject.perform(MainActivity.getUser());
+            return;
+        }*/
         Call<User> call = MainActivity.getTalkingToServerService().serverGetMyself(MainActivity.getAddToToken() + MainActivity.getToken());
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
+                Log.e(TAG, "onResponse: " + response.toString());
                 if (!response.isSuccessful())
                 {
                     onErrorCallback.perform();
                     return;
                 }
+                Log.e(TAG, "onResponse: " + response.body().toString());
                 performObject.perform(response.body());
             }
 

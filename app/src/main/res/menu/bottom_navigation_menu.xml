@@ -3,19 +3,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/one"
+    <item
+        android:id="@+id/one"
         android:title="@string/one"
-        android:icon="@drawable/ic_launcher_background" />
+        android:icon="@drawable/ic_list" />
+
     <item android:id="@+id/two"
         android:title="@string/two"
-        android:icon="@drawable/ic_launcher_background" />
-    <item android:id="@+id/three"
-        android:title="@string/three"
-        android:icon="@drawable/ic_launcher_background" />
-    <item android:id="@+id/four"
-        android:title="@string/four"
-        android:icon="@drawable/ic_launcher_background" />
-    <item android:id="@+id/five"
-        android:title="@string/five"
-        android:icon="@drawable/ic_launcher_background" />
+        android:icon="@drawable/ic_profile_" />
+    <item
+        android:id="@+id/three"
+        android:icon="@drawable/ic_feed"
+        android:title="@string/three" />
+    <item
+        android:id="@+id/four"
+        android:icon="@drawable/ic_search"
+        android:title="@string/four" />
+    <item
+        android:id="@+id/five"
+        android:icon="@drawable/ic_add"
+        android:title="@string/five" />
 </menu>
