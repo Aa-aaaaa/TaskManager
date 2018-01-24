@@ -15,6 +15,7 @@ public class FragmentsNow {
     private MyProfileFragment myProfileFragment;
     private FeedFragment feedFragment;
     private UserListFragment friendsFragment;
+    private UserListFragment findUserFragment;
     private boolean closeAll;
     private int number_of_fragment_block;
 
@@ -47,6 +48,7 @@ public class FragmentsNow {
         this.feedFragment = null;
         this.myProfileFragment = null;
         this.friendsFragment = null;
+        this.findUserFragment = null;
         this.number_of_fragment_block = 1;
     }
 
@@ -55,6 +57,7 @@ public class FragmentsNow {
         this.taskShowFragment = null;
         this.emptyFragment = null;
         this.feedFragment = null;
+        this.findUserFragment = null;
         if (friends)
             this.friendsFragment = (this.friendsFragment == null) ? new UserListFragment() : this.friendsFragment;
         else
@@ -74,8 +77,10 @@ public class FragmentsNow {
 
     public void setFind() {
         clearAll();
+        this.findUserFragment = UserListFragment.newInstance("following");
         this.number_of_fragment_block = 4;
     }
+
 
     public void clearAll() {
         this.taskListFragment = null;
@@ -84,6 +89,11 @@ public class FragmentsNow {
         this.myProfileFragment = null;
         this.friendsFragment = null;
         this.feedFragment = null;
+        this.findUserFragment = null;
+    }
+
+    public UserListFragment getFUF() {
+        return findUserFragment;
     }
 
     public TaskShowFragment getTSF()
