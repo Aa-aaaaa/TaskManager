@@ -1,5 +1,6 @@
 package com.example.asus.taskmanager.activities;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -15,6 +16,7 @@ import com.example.asus.taskmanager.FragmentsNow;
 import com.example.asus.taskmanager.MyDate;
 import com.example.asus.taskmanager.R;
 import com.example.asus.taskmanager.ServerTask;
+import com.example.asus.taskmanager.fragments.FeedFragment;
 import com.example.asus.taskmanager.TalkingToServerService;
 import com.example.asus.taskmanager.Task;
 import com.example.asus.taskmanager.TaskList;
@@ -23,6 +25,7 @@ import com.example.asus.taskmanager.Utils;
 import com.example.asus.taskmanager.fragments.MyProfileFragment;
 import com.example.asus.taskmanager.fragments.TaskListFragment;
 import com.example.asus.taskmanager.fragments.TaskShowFragment;
+import com.example.asus.taskmanager.fragments.UserListFragment;
 
 import java.util.List;
 
@@ -122,10 +125,13 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
                         startMyProfile();
                         return true;
                     case R.id.three:
+                        startFeed();
                         return true;
                     case id.four:
+                        startFind();
                         return true;
                     case id.five:
+                        startMyTasks();
                         fragmentsNow.setNumber_of_fragment_block(5);
                         startAll();
                         return true;
@@ -138,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     void startAll() {
         switch (fragmentsNow.getNumber_of_fragment_block()) {
             case 5:
+                startMyTasks();
                 fragmentsNow.setMyTasks(false, true, false);
                 fragmentsNow.setNumber_of_fragment_block(1);
             case 1:
@@ -149,9 +156,11 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
                 bottomNavigationView.setSelectedItemId(id.two);
                 return;
             case 3:
+                startFeed();
                 bottomNavigationView.setSelectedItemId(id.three);
                 return;
             case 4:
+                startFind();
                 bottomNavigationView.setSelectedItemId(id.four);
                 return;
         }
@@ -162,11 +171,36 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
+    private void clearAll()
+    {
+        if (fragmentsNow.getTSF() != null)
+            getFragmentManager().beginTransaction().remove(fragmentsNow.getTSF()).commit();
+        if (fragmentsNow.getMFF() != null)
+            getSupportFragmentManager().beginTransaction().remove(fragmentsNow.getMFF()).commit();
+        if (fragmentsNow.getFUF() != null)
+            getSupportFragmentManager().beginTransaction().remove(fragmentsNow.getFUF()).commit();
+        clearNotAll();
+      }
+
+    private void clearNotAll() {
+        if (fragmentsNow.getEF() != null)
+            getFragmentManager().beginTransaction().remove(fragmentsNow.getEF()).commit();
+        if (fragmentsNow.getFF() != null)
+            getFragmentManager().beginTransaction().remove(fragmentsNow.getFF()).commit();
+        if (fragmentsNow.getMPF() != null)
+            getSupportFragmentManager().beginTransaction().remove(fragmentsNow.getMPF()).commit();
+        if (fragmentsNow.getTLF() != null)
+            getFragmentManager().beginTransaction().remove(fragmentsNow.getTLF()).commit();
+    }
+
     private void startMyTasks()
     {
+        clearNotAll();
+        if (fragmentsNow.getFUF() != null)
+            getSupportFragmentManager().beginTransaction().remove(fragmentsNow.getFUF()).commit();
+        if (fragmentsNow.getMFF() != null)
+            getSupportFragmentManager().beginTransaction().remove(fragmentsNow.getMFF()).commit();
         fragmentsNow.setNumber_of_fragment_block(1);
-        if (getFragmentManager().findFragmentById(id.all_screen) != null)
-            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.all_screen)).commit();
         if (fragmentsNow.getTSF() == null) {
             if (check_land()) {
                 fragmentsNow.setMyTasks(true, false, true);
@@ -195,13 +229,42 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
 
     private void startMyProfile()
     {
-        fragmentsNow.setNumber_of_fragment_block(2);
-        if (getFragmentManager().findFragmentById(id.other) != null)
-            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.other)).commit();
-        if (check_land() && getFragmentManager().findFragmentById(id.list) != null)
-            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.list)).commit();
-        fragmentsNow.setMyProfile();
-        getFragmentManager().beginTransaction().replace(id.all_screen, fragmentsNow.getMPF()).commit();
+        clearNotAll();
+        if (fragmentsNow.getTSF() != null)
+            getFragmentManager().beginTransaction().remove(fragmentsNow.getTSF()).commit();
+        if (fragmentsNow.getFUF() != null)
+            getSupportFragmentManager().beginTransaction().remove(fragmentsNow.getFUF()).commit();
+        if (fragmentsNow.getMFF() == null)
+        {
+            fragmentsNow.setMyProfile(false, true);
+            getSupportFragmentManager().beginTransaction().replace(id.all_screen, fragmentsNow.getMPF()).commit();
+        }
+        else
+        {
+            fragmentsNow.setMyProfile(true, false);
+            getSupportFragmentManager().beginTransaction().replace(id.all_screen, fragmentsNow.getMFF()).commit();
+        }
+        fragmentsNow.setCloseAll(false);
+    }
+
+    private void startFeed()
+    {
+        clearAll();
+        fragmentsNow.setFeed();
+        getFragmentManager().beginTransaction().replace(id.all_screen, fragmentsNow.getFF()).commit();
+        fragmentsNow.setCloseAll(false);
+    }
+
+    private void startFind()
+    {
+        clearNotAll();
+        if (fragmentsNow.getTSF() != null)
+            getFragmentManager().beginTransaction().remove(fragmentsNow.getTSF()).commit();
+        if (fragmentsNow.getMFF() != null)
+            getSupportFragmentManager().beginTransaction().remove(fragmentsNow.getMFF()).commit();
+        fragmentsNow.setFind();
+        fragmentsNow.setFUF("search");
+        getSupportFragmentManager().beginTransaction().replace(id.all_screen, fragmentsNow.getFUF()).commit();
         fragmentsNow.setCloseAll(false);
     }
 
@@ -222,11 +285,24 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     }
 
     @Override
+    public void goFriendsListener(String s) {
+        fragmentsNow.setMyProfile(true, false);
+        fragmentsNow.setMFF(s);
+        startAll();
+        fragmentsNow.setCloseAll(false);
+    }
+
+    @Override
     public void onBackPressed() {
         if (fragmentsNow.getNumber_of_fragment_block() == 1)
         {
             fragmentsNow.setMyTasks(false, false, false);
             startMyTasks();
+        }
+        else if (fragmentsNow.getNumber_of_fragment_block() == 2)
+        {
+            fragmentsNow.setMyProfile(false, true);
+            startMyProfile();
         }
         if (fragmentsNow.isCloseAll())
             super.onBackPressed();

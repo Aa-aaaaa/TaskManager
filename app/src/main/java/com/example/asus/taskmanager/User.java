@@ -144,7 +144,6 @@ public class User {
                 getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
         token = sharedPreferences.getString("token", null);
         id = sharedPreferences.getLong("id", 0);
-        Log.e(TAG, "setInfoFromSP: " + id);
     }
 
     public void succesfullLogin(Context context, String token) // Adds token to Share Preferences, sets this.token
@@ -154,6 +153,15 @@ public class User {
                 getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
         sharedPreferences.edit().putString("token", token).commit();
     }
+
+    public void succesfullLoginId(Context context, Long id) // Adds token to Share Preferences, sets this.token
+    {
+        this.id = id;
+        SharedPreferences sharedPreferences = context.
+                getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putLong("id", id).commit();
+    }
+
 
     public void successfullGotId(Context context, long id)
     {
@@ -168,8 +176,7 @@ public class User {
         this.token = null;
         SharedPreferences sharedPreferences = context.
                 getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
-        sharedPreferences.edit().remove("token").commit();
-        sharedPreferences.edit().remove("id").commit();
+        sharedPreferences.edit().remove("token").remove("id").commit();
     }
 
     public static void getToken(final User user, final Context context, final TaskList.PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
@@ -232,23 +239,15 @@ public class User {
 
     public static void getMyself(final TaskList.PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
     {
-        Log.e(TAG, "getMyself: " + MainActivity.getToken());
-        /*if (MainActivity.getUser().getId() > 0)
-        {
-            performObject.perform(MainActivity.getUser());
-            return;
-        }*/
         Call<User> call = MainActivity.getTalkingToServerService().serverGetMyself(MainActivity.getAddToToken() + MainActivity.getToken());
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                Log.e(TAG, "onResponse: " + response.toString());
                 if (!response.isSuccessful())
                 {
                     onErrorCallback.perform();
                     return;
                 }
-                Log.e(TAG, "onResponse: " + response.body().toString());
                 performObject.perform(response.body());
             }
 

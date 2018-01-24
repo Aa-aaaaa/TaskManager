@@ -1,8 +1,7 @@
 package com.example.asus.taskmanager.fragments;
 
-
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,9 +14,14 @@ import com.example.asus.taskmanager.R;
 import com.example.asus.taskmanager.activities.MainActivity;
 
 public class MyProfileFragment extends Fragment {
+    @Override
+    public void onCreate(@org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     public interface OnMyProfileDataListener {
         void goLoginActivityListener();
+        void goFriendsListener(String s);
     }
 
     private OnMyProfileDataListener mListener;
@@ -28,11 +32,6 @@ public class MyProfileFragment extends Fragment {
         mListener = (OnMyProfileDataListener) activity;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -40,16 +39,27 @@ public class MyProfileFragment extends Fragment {
 
         TextView tvFullName = view.findViewById(R.id.tvFullName);
         TextView tvEmail = view.findViewById(R.id.tvEmail);
-
         tvFullName.setText(MainActivity.getUser().getToken());
         //tvEmail.setText(MainActivity.getUser().getUsername());
 
-
-        Button bLogout = view.findViewById(R.id.bLogout);
-        bLogout.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.bLogout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.goLoginActivityListener();
+            }
+        });
+
+        view.findViewById(R.id.bGoFollowing).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.goFriendsListener("following");
+            }
+        });
+
+        view.findViewById(R.id.bGoFollowers).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.goFriendsListener("followers");
             }
         });
 
