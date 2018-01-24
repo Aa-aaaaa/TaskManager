@@ -207,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         if (fragmentsNow.getMFF() != null)
             getSupportFragmentManager().beginTransaction().remove(fragmentsNow.getMFF()).commit();
         fragmentsNow.setFind();
+        fragmentsNow.setFUF("search");
         getSupportFragmentManager().beginTransaction().replace(id.all_screen, fragmentsNow.getFUF()).commit();
         fragmentsNow.setCloseAll(false);
     }

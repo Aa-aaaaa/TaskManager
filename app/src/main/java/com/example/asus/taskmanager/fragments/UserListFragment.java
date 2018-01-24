@@ -15,10 +15,13 @@ import com.example.asus.taskmanager.R;
 import com.example.asus.taskmanager.TaskList;
 import com.example.asus.taskmanager.User;
 import com.example.asus.taskmanager.Utils;
+import com.example.asus.taskmanager.activities.MainActivity;
 import com.example.asus.taskmanager.adapters.UserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class UserListFragment extends Fragment
 {
@@ -50,29 +53,99 @@ public class UserListFragment extends Fragment
         RecyclerView recycler = view.findViewById(R.id.rvUserList);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        Log.d("USER", "Ne");
-
-        //TODO: two variants: following and followers - depends on userType, need server CHANGE userList
         final List<User> userList = new ArrayList<>();
 
         final UserAdapter adapter;
         adapter = new UserAdapter(getActivity(), userList);
         recycler.setAdapter(adapter);
 
-        User.getAllUsers(new TaskList.PerformObject() {
-                             @Override
-                             public void perform(Object object) {
-                                 userList.addAll((List<User>)object);
-                                 adapter.notifyDataSetChanged();
-                             }
-                         },
-                new Utils.OnErrorCallback() {
+        switch (userType) {
+            case "followers":
+            {
+                User.getMyself(new TaskList.PerformObject() {
+                    @Override
+                    public void perform(Object object) {
+                        MainActivity.getUser().setSubscribers(((User)object).getSubscribers());
+                        List<Long> usersId = MainActivity.getUser().getSubscribers();
+                        final int usersIdSize = usersId.size();
+                        for (Long id : usersId) {
+                            User.getUser(id, new TaskList.PerformObject() {
+                                @Override
+                                public void perform(Object object) {
+                                    userList.add((User) object);
+                                    if (userList.size() == usersIdSize) {
+                                        adapter.setUserList(userList);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }
+                            }, new Utils.OnErrorCallback() {
+                                @Override
+                                public void perform() {
+
+                                }
+                            });
+                        }
+                    }
+                }, new Utils.OnErrorCallback() {
                     @Override
                     public void perform() {
-
+                        Log.e(TAG, "perform: Error Happened");
                     }
-                }
-        );
+                });
+                break;
+            }
+            case "following": {
+                User.getMyself(new TaskList.PerformObject() {
+                    @Override
+                    public void perform(Object object) {
+                        MainActivity.getUser().setSubscribedOn(((User)object).getSubscribedOn());
+                        List<Long> usersId = MainActivity.getUser().getSubscribedOn();
+                        final int usersIdSize = usersId.size();
+                        Log.d("SUB", " " + usersIdSize);
+                        for (Long id : usersId) {
+                            User.getUser(id, new TaskList.PerformObject() {
+                                @Override
+                                public void perform(Object object) {
+                                    userList.add((User) object);
+                                    if (userList.size() == usersIdSize) {
+                                        adapter.setUserList(userList);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }
+                            }, new Utils.OnErrorCallback() {
+                                @Override
+                                public void perform() {
+
+                                }
+                            });
+                        }
+                    }
+                }, new Utils.OnErrorCallback() {
+                    @Override
+                    public void perform() {
+                        Log.e(TAG, "perform: Error Happened");
+                    }
+                });
+                break;
+            }
+            case "search": {
+                User.getAllUsers(new TaskList.PerformObject() {
+                                     @Override
+                                     public void perform(Object object) {
+                                         userList.addAll((List<User>) object);
+                                         adapter.notifyDataSetChanged();
+                                     }
+                                 },
+                        new Utils.OnErrorCallback() {
+                            @Override
+                            public void perform() {
+
+                            }
+                        }
+                );
+                break;
+            }
+        }
 
         return view;
     }

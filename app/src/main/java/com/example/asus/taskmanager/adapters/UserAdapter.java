@@ -26,6 +26,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         this.userList = userList;
     }
 
+    public void setUserList(List<User> userList)
+    {
+        this.userList = userList;
+    }
+
     @Override
     public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);

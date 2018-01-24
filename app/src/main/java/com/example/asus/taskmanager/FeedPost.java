@@ -1,12 +1,5 @@
 package com.example.asus.taskmanager;
 
-import com.example.asus.taskmanager.adapters.FeedAdapter;
-import com.example.asus.taskmanager.fragments.FeedFragment;
-
-/**
- * Created by serge on 24.01.2018.
- */
-
 public class FeedPost
 {
     private static Long amountOfPosts;

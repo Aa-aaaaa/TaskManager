@@ -133,6 +133,10 @@ public class FragmentsNow {
         friendsFragment = UserListFragment.newInstance(s);
     }
 
+    public void setFUF(String s) {
+        findUserFragment = UserListFragment.newInstance(s);
+    }
+
     public int getNumber_of_fragment_block()
     {
         return this.number_of_fragment_block;
