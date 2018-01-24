@@ -32,47 +32,52 @@
     <Button
         android:id="@+id/bGoFollowing"
         android:layout_weight="1"
-        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
         android:text="Following"
         android:background="@color/colorPrimary"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="8dp" />
 
     <Button
         android:id="@+id/bGoFollowers"
         android:layout_weight="1"
-        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
         android:text="Followers"
         android:background="@color/colorPrimary"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="8dp" />
 
     <Button
         android:layout_weight="1"
-        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:background="@color/colorPrimary"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="Change Name" />
 
     <Button
         android:layout_weight="1"
-        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:background="@color/colorPrimary"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="Change password" />
 
     <Button
         android:id="@+id/bLogout"
         android:layout_weight="1"
-        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:background="@color/colorPrimary"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="Logout" />
 
 </LinearLayout>
