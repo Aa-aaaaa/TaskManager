@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TaskManager.iml" filepath="$PROJECT_DIR$/TaskManager.iml" />
+      <module fileurl="file://C:\Users\Asus\AndroidStudioProjects\Wuwudar\TaskManager.iml" filepath="C:\Users\Asus\AndroidStudioProjects\Wuwudar\TaskManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Wuwudar.iml" filepath="$PROJECT_DIR$/Wuwudar.iml" />
       <module fileurl="file://C:\programming\TaskManager\Wuwudar.iml" filepath="C:\programming\TaskManager\Wuwudar.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
