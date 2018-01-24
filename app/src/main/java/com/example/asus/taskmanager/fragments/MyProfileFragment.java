@@ -39,8 +39,8 @@ public class MyProfileFragment extends Fragment {
 
         TextView tvFullName = view.findViewById(R.id.tvFullName);
         TextView tvEmail = view.findViewById(R.id.tvEmail);
-        tvFullName.setText(MainActivity.getUser().getToken());
-        //tvEmail.setText(MainActivity.getUser().getUsername());
+        tvFullName.setText(MainActivity.getUser().getFirstName() + " " + MainActivity.getUser().getLastName());
+        tvEmail.setText(MainActivity.getUser().getLogin());
 
         view.findViewById(R.id.bLogout).setOnClickListener(new View.OnClickListener() {
             @Override

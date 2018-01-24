@@ -18,7 +18,7 @@
 
             <TextView
                 android:id="@+id/tvOwnerName"
-                android:layout_width="160dp"
+                android:layout_width="140dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -27,7 +27,7 @@
 
             <TextView
                 android:id="@+id/tvTaskName"
-                android:layout_width="60dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"

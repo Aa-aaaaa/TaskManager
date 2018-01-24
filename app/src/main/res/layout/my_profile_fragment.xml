@@ -14,10 +14,10 @@
         android:layout_weight="1"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="20dp"
         android:textSize="18sp"
         android:text="Full name" />
-
+1
     <TextView
         android:id="@+id/tvEmail"
         android:layout_weight="1"
@@ -25,18 +25,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvFullName"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:text="Email"
         android:textSize="18sp" />
-
-    <Button
-        android:id="@+id/bLogout"
-        android:layout_weight="2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorPrimary"
-        android:text="Logout" />
 
     <Button
         android:id="@+id/bGoFollowing"
@@ -55,5 +46,33 @@
         android:text="Followers"
         android:background="@color/colorPrimary"
         android:layout_marginTop="5dp" />
+
+    <Button
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"
+        android:layout_marginTop="5dp"
+        android:text="Change Name" />
+
+    <Button
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"
+        android:layout_marginTop="5dp"
+        android:text="Change password" />
+
+    <Button
+        android:id="@+id/bLogout"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"
+        android:layout_marginTop="5dp"
+        android:text="Logout" />
 
 </LinearLayout>
