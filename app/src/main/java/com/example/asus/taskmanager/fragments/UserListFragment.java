@@ -5,13 +5,16 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.asus.taskmanager.R;
+import com.example.asus.taskmanager.TaskList;
 import com.example.asus.taskmanager.User;
+import com.example.asus.taskmanager.Utils;
 import com.example.asus.taskmanager.adapters.UserAdapter;
 
 import java.util.ArrayList;
@@ -44,22 +47,33 @@ public class UserListFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_list_fragment, container, false);
 
-        List<User> userList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            userList.add(new User("Sergo", userType, "Sergo", "lol"));
-            userList.add(new User("Marina", "Marina", "Marina", "kek"));
-            userList.add(new User("Max", "Max", "Max", "azaza"));
-        }
-
-
         RecyclerView recycler = view.findViewById(R.id.rvUserList);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //TODO: two variants: following and followers - depends on userType, need server CHANGE userList
-        UserAdapter adapter;
-        adapter = new UserAdapter(getActivity(), userList);
+        Log.d("USER", "Ne");
 
+        //TODO: two variants: following and followers - depends on userType, need server CHANGE userList
+        final List<User> userList = new ArrayList<>();
+
+        final UserAdapter adapter;
+        adapter = new UserAdapter(getActivity(), userList);
         recycler.setAdapter(adapter);
+
+        User.getAllUsers(new TaskList.PerformObject() {
+                             @Override
+                             public void perform(Object object) {
+                                 userList.addAll((List<User>)object);
+                                 adapter.notifyDataSetChanged();
+                             }
+                         },
+                new Utils.OnErrorCallback() {
+                    @Override
+                    public void perform() {
+
+                    }
+                }
+        );
+
         return view;
     }
 }

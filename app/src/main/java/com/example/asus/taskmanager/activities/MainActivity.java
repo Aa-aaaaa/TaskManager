@@ -20,6 +20,7 @@ import com.example.asus.taskmanager.User;
 import com.example.asus.taskmanager.fragments.MyProfileFragment;
 import com.example.asus.taskmanager.fragments.TaskListFragment;
 import com.example.asus.taskmanager.fragments.TaskShowFragment;
+import com.example.asus.taskmanager.fragments.UserListFragment;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -190,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
             getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.other)).commit();
         if (check_land() && getFragmentManager().findFragmentById(id.list) != null)
             getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(id.list)).commit();
-
+        getSupportFragmentManager().beginTransaction().replace(id.all_screen, UserListFragment.newInstance("Followers")).commit();
         fragmentsNow.setCloseAll(false);
     }
 
@@ -259,24 +260,6 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
     public static String getToken()
     {
         return user.getToken();
-    }
-    public static void setToken(String newToken)
-    {
-        user.setToken(newToken);
-    }
-
-    public static String getUsername(){
-        return user.getLogin();
-    }
-    public static void  setUsername(String newUsername){
-        user.setLogin(newUsername);
-    }
-
-    public static String getPassword(){
-        return user.getPassword();
-    }
-    public static void  setPassword(String newPassword){
-        user.setPassword(newPassword);
     }
 
     public static String getAddToToken(){

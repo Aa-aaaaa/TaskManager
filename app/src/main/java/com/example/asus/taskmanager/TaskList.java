@@ -27,13 +27,6 @@ public class TaskList {
         return taskList;
     }
 
-    /*public void addTask(Task task)
-    {
-        this.getDataBase().addTask(task);
-        //Log.d("KEK");
-        FoneService.addTask(task, thisContext);
-    }*/
-
     public void addTask(final Task task, final PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
     {
         this.getDataBase().addTask(task);

@@ -142,6 +142,7 @@ public class User {
         SharedPreferences sharedPreferences = context.
                 getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
         token = sharedPreferences.getString("token", null);
+        id = sharedPreferences.getLong("id", 0);
     }
 
     public void succesfullLogin(Context context, String token) // Adds token to Share Preferences, sets this.token
@@ -152,12 +153,21 @@ public class User {
         sharedPreferences.edit().putString("token", token).commit();
     }
 
+    public void succesfullLoginId(Context context, Long id) // Adds token to Share Preferences, sets this.token
+    {
+        this.id = id;
+        SharedPreferences sharedPreferences = context.
+                getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putLong("id", id).commit();
+    }
+
+
     public void logout(Context context)
     {
         this.token = null;
         SharedPreferences sharedPreferences = context.
                 getSharedPreferences(MainActivity.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
-        sharedPreferences.edit().remove("token").commit();
+        sharedPreferences.edit().remove("token").remove("id").commit();
     }
 
     public static void getToken(final User user, final Context context, final TaskList.PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
@@ -170,23 +180,25 @@ public class User {
                     if (!response.isSuccessful())
                     {
                         onErrorCallback.perform();
-                        getMyself(new TaskList.PerformObject() {
-                            @Override
-                            public void perform(Object object) {
-                                User user1 = (User) object;
-                                user1.setToken(user.getToken());
-                                user1.setPassword(user.getPassword());
-                                MainActivity.setUser(user1);
-                            }
-                        }, new Utils.OnErrorCallback() {
-                            @Override
-                            public void perform() {
-                                Log.e(TAG, "perform: Error Happened");
-                            }
-                        });
                         return;
                     }
                     performObject.perform(response.body());
+
+                    getMyself(new TaskList.PerformObject() {
+                        @Override
+                        public void perform(Object object) {
+                            User user1 = (User) object;
+                            user1.setToken(user.getToken());
+                            user1.setPassword(user.getPassword());
+                            MainActivity.setUser(user1);
+                            MainActivity.getUser().succesfullLoginId(context, user1.getId());
+                        }
+                    }, new Utils.OnErrorCallback() {
+                        @Override
+                        public void perform() {
+                            Log.e(TAG, "perform: Error Happened");
+                        }
+                    });
                 }
 
                 @Override
@@ -203,6 +215,7 @@ public class User {
                     user1.setToken(user.getToken());
                     user1.setPassword(user.getPassword());
                     MainActivity.setUser(user1);
+                    MainActivity.getUser().succesfullLoginId(context, user1.getId());
                 }
             }, new Utils.OnErrorCallback() {
                 @Override
