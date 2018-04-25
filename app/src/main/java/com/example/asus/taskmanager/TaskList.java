@@ -1,65 +1,238 @@
 package com.example.asus.taskmanager;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.TreeSet;
+import android.content.Context;
+import android.util.Log;
+
+import com.example.asus.taskmanager.activities.MainActivity;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static android.content.ContentValues.TAG;
 
 public class TaskList {
     private static TaskList taskList;
-    private ArrayList<Task> arrayList;
+    private static DataBase dataBase;
+    private static Context thisContext;
 
-    private TaskList() {
-        this.arrayList = new ArrayList<>();
-    }
-
-    public static TaskList getInstance() {
-        if (taskList == null)
+    public static TaskList getInstance(Context context) {
+        if (taskList == null) {
             taskList = new TaskList();
+            makeDB(context);
+            thisContext = context;
+        }
         return taskList;
     }
 
-    public void addTask(Task task)
+    public void addTask(final Task task, final PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
     {
-        this.arrayList.add(task);
-        Collections.sort(arrayList, new Comparator<Task>() {
-            public int compare(Task a, Task b)
-            {
-                return (a.getTime().myGetTime().compareTo(b.getTime().myGetTime()));
+        this.getDataBase().addTask(task);
+        Call<ServerTask> call = MainActivity.getTalkingToServerService().serverAddTask(MainActivity.getAddToToken() + MainActivity.getToken(), task.getName(), task.getTime().getStringForDB(), task.getDescription());
+        call.enqueue(new Callback<ServerTask>() {
+            @Override
+            public void onResponse(Call<ServerTask> call, Response<ServerTask> response) {
+                if (!response.isSuccessful())
+                {
+                    onErrorCallback.perform();
+                    return;
+                }
+                performObject.perform(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ServerTask> call, Throwable t) {
+                onErrorCallback.perform();
             }
         });
     }
 
-    public void addTaskNotSort(Task task)
+    public Task getTask(long dataBaseId)
     {
-        this.arrayList.add(task);
+        return this.getDataBase().getTaskById(dataBaseId);
     }
 
-    public Task getTask(int index)
+    public void deleteTask(long dataBaseId, final PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
     {
-        return arrayList.get(index);
+        Long globalId = this.getDataBase().getTaskById(dataBaseId).getGlobalDataBaseId();
+        this.getDataBase().deleteTask(dataBaseId);
+        if (globalId != -1)
+        {
+            Call<Void> call = MainActivity.getTalkingToServerService().serverDeleteTask(globalId, MainActivity.getAddToToken() + MainActivity.getToken());
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    Log.d(TAG, "onResponse: " + response.toString());
+                    if (!response.isSuccessful())
+                    {
+                        onErrorCallback.perform();
+                        return;
+                    }
+                    performObject.perform(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    onErrorCallback.perform();
+                }
+            });
+        }
     }
 
-    public int getSize()
-    {
-        return arrayList.size();
+    public void deleteTask(Task task) {
+        this.getDataBase().deleteTask(task.getDataBaseId());
     }
 
-    public void deleteTask(int index) {
-        this.arrayList.remove(index);
-        Collections.sort(arrayList, new Comparator<Task>() {
-            public int compare(Task a, Task b)
-            {
-                return (a.getTime().myGetTime().compareTo(b.getTime().myGetTime()));
+    public void changeTask(Task newTask, final PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
+    {
+        this.getDataBase().updateTask(newTask);
+        Call<ServerTask> call = MainActivity.getTalkingToServerService().serverUpdateTask(newTask.getGlobalDataBaseId(),MainActivity.getAddToToken() + MainActivity.getToken(), newTask.getName(), newTask.getTime().getStringForDB(), newTask.getDescription());
+        call.enqueue(new Callback<ServerTask>() {
+            @Override
+            public void onResponse(Call<ServerTask> call, Response<ServerTask> response) {
+                Log.d(TAG, "onResponse: " + response.toString());
+                if (!response.isSuccessful())
+                {
+                    onErrorCallback.perform();
+                    return;
+                }
+                performObject.perform(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ServerTask> call, Throwable t) {
+                Log.e(TAG, "onFailure: UpdateFailure");
+                onErrorCallback.perform();
             }
         });
     }
 
-    public void changeTask(int index, Task newTask)
+    private static void makeDB(Context context)
     {
-        deleteTask(index);
-        addTask(newTask);
+        dataBase = new DataBase(context);
     }
 
+    public DataBase getDataBase()
+    {
+        return this.dataBase;
+    }
+
+    public void clearDataBase()
+    {
+        dataBase.onUpgrade(null, 0, 0);
+    }
+
+
+    public void getAllTasksFromGlobalDataBase(final PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
+    {
+        Call<List<ServerTask>> call = MainActivity.getTalkingToServerService().serverGetAll(MainActivity.getUser().getId(), MainActivity.getAddToToken() + MainActivity.getToken());
+        call.enqueue(new Callback<List<ServerTask>>() {
+            @Override
+            public void onResponse(Call<List<ServerTask>> call, Response<List<ServerTask>> response) {
+                if (!response.isSuccessful())
+                {
+                    onErrorCallback.perform();
+                    return;
+                }
+                performObject.perform(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ServerTask>> call, Throwable t) {
+                onErrorCallback.perform();
+            }
+        });
+    }
+
+    public void getWall(final PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
+    {
+        Call<List<ServerTask>> call = MainActivity.getTalkingToServerService().serverGetWall(MainActivity.getAddToToken() + MainActivity.getToken());
+        call.enqueue(new Callback<List<ServerTask>>() {
+            @Override
+            public void onResponse(Call<List<ServerTask>> call, Response<List<ServerTask>> response) {
+                if (!response.isSuccessful())
+                {
+                    onErrorCallback.perform();
+                    return;
+                }
+                performObject.perform(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ServerTask>> call, Throwable t) {
+                onErrorCallback.perform();
+            }
+        });
+    }
+
+    public void getTask(long taskid, final PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
+    {
+        Call<ServerTask> call = MainActivity.getTalkingToServerService().serverGetTask(taskid, MainActivity.getAddToToken() + MainActivity.getToken());
+        call.enqueue(new Callback<ServerTask>() {
+            @Override
+            public void onResponse(Call<ServerTask> call, Response<ServerTask> response) {
+                if (!response.isSuccessful())
+                {
+                    onErrorCallback.perform();
+                    return;
+                }
+                performObject.perform(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ServerTask> call, Throwable t) {
+                onErrorCallback.perform();
+            }
+        });
+    }
+
+    public void like(long taskid, final PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
+    {
+        Call<Void> call = MainActivity.getTalkingToServerService().serverLike(taskid, MainActivity.getAddToToken() + MainActivity.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful())
+                {
+                    onErrorCallback.perform();
+                    return;
+                }
+                performObject.perform(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                onErrorCallback.perform();
+            }
+        });
+    }
+
+    public void unlike(long taskid, final PerformObject performObject, final Utils.OnErrorCallback onErrorCallback)
+    {
+        Call<Void> call = MainActivity.getTalkingToServerService().serverUnlike(taskid, MainActivity.getAddToToken() + MainActivity.getToken());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful())
+                {
+                    onErrorCallback.perform();
+                    return;
+                }
+                performObject.perform(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                onErrorCallback.perform();
+            }
+        });
+    }
+
+
+    public interface PerformObject
+    {
+        void perform(Object object);
+    }
 }

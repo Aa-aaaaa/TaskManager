@@ -6,14 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/listFragment"
-    tools:context="com.example.asus.taskmanager.MainActivity">
+    tools:context="com.example.asus.taskmanager.activities.MainActivity">
 
-    <Button
-        android:id="@+id/buttonGoMakeNewTask"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_weight="1"
-        android:text="@string/make_new_task" />
+    <TextView
+        android:id="@+id/taskHead"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <ListView
         android:id="@+id/taskList"

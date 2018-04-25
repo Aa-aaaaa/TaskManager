@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/emptyFragment"
-    tools:context="com.example.asus.taskmanager.MainActivity">
+    tools:context="com.example.asus.taskmanager.activities.MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
